@@ -23,6 +23,9 @@ FAILED_BRANCHES=()
 NO_CHANGES_BRANCHES=()
 DELETED_BRANCHES_LIST=()
 
+# Navigate to the specified directory
+cd "/Users/niman/Desktop/Pad/Work/Trajekt/ArcMachine/" || exit
+
 # Fetch the latest changes and prune remote branches in the repository directory
 git fetch --all --prune
 git remote prune origin

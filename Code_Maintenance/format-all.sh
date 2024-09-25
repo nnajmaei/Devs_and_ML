@@ -8,6 +8,9 @@ DARK_BLUE='\033[1;34m'
 GRAY='\033[2;37m'  # Dim white
 NC='\033[0m' # No Color
 
+# Navigate to the specified directory
+cd "/Users/niman/Desktop/Pad/Work/Trajekt/ArcMachine/" || exit
+
 git add .
 echo "--------------------------------------------------------------------------------"
 echo -e "${BLUE}Starting format-all.sh script...${NC}"
