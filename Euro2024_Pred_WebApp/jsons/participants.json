@@ -1,0 +1,54 @@
+{
+  "participants": [
+    {
+      "name": "Ali B",
+      "file": "./predictions_csv/Ali_B.csv",
+      "scores": "./results_csv/Ali_B_scores.csv"
+    },
+    {
+      "name": "Amir D",
+      "file": "./predictions_csv/Amir_D.csv",
+      "scores": "./results_csv/Amir_D_scores.csv"
+    },
+    {
+      "name": "Babak J",
+      "file": "./predictions_csv/Babak_J.csv",
+      "scores": "./results_csv/Babak_J_scores.csv"
+    },
+    {
+      "name": "Ehsan T",
+      "file": "./predictions_csv/Ehsan_T.csv",
+      "scores": "./results_csv/Ehsan_T_scores.csv"
+    },
+    {
+      "name": "Hootan M",
+      "file": "./predictions_csv/Hootan_M.csv",
+      "scores": "./results_csv/Hootan_M_scores.csv"
+    },
+    {
+      "name": "Mod J",
+      "file": "./predictions_csv/Mod_J.csv",
+      "scores": "./results_csv/Mod_J_scores.csv"
+    },
+    {
+      "name": "Nima N",
+      "file": "./predictions_csv/Nima_N.csv",
+      "scores": "./results_csv/Nima_N_scores.csv"
+    },
+    {
+      "name": "Ramin R",
+      "file": "./predictions_csv/Ramin_R.csv",
+      "scores": "./results_csv/Ramin_R_scores.csv"
+    },
+    {
+      "name": "Shahriar N",
+      "file": "./predictions_csv/Shahriar_N.csv",
+      "scores": "./results_csv/Shahriar_N_scores.csv"
+    },
+    {
+      "name": "Siamak J",
+      "file": "./predictions_csv/Siamak_J.csv",
+      "scores": "./results_csv/Siamak_J_scores.csv"
+    }
+  ]
+}

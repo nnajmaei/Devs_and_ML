@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="./logos/favicon.png">
+    <title>Player vs. Player</title>
+    <style>
+        body {
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            margin: 10px;
+            background-color: #1e1e1e;
+            color: #7c7a7a;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0;
+            margin-bottom: 10px;
+        }
+
+        th,
+        td {
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #333333;
+        }
+
+        th:first-child,
+        td:first-child {
+            width: 15%;
+        }
+
+        select {
+            width: 200px;
+            background-color: #6b6a6a;
+            color: #fff;
+            border: 1px solid #444444;
+        }
+
+        .comparison-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            /* Adjust gap between participant containers */
+        }
+
+        .participant-container {
+            flex: 1;
+            /* Make each participant container take equal space */
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .bold-text {
+            font-weight: bold;
+        }
+
+        .flag {
+            vertical-align: middle;
+            margin-right: 5px;
+        }
+
+        .menu-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .menu {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .menu li {
+            display: inline;
+            margin-left: 20px;
+        }
+
+        .menu li a {
+            color: #7c7a7a;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .footnote {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.8em;
+            color: #484747;
+            background-color: 1e1e1e;
+            padding: 5px;
+            border-radius: 3px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="menu-container">
+        <ul class="menu">
+            <li><a href="./ranks.html">Rankings</a></li>
+            <li><a href="./comp2euros.html">Euro2024 Results</a></li>
+            <li><a href="./group_gbyg.html">Group Stages Results</a></li>
+            <li><a href="./KOscores.html">KO Stages Results</a></li>
+            <li><a href="./pvsp.html">Player vs Player</a></li>
+            <li><a href="./all_predictions.html">Download All Predictions</a></li>
+            <li><a href="./predictform.html">Prediction Form</a></li>
+            <li><a href="./rules.html">Points System</a></li>
+            <li><a href="./widget.html">Widget</a></li>
+        </ul>
+    </div>
+    <div class="logo-container">
+        <img src="./logos/logo.png" alt="Euro 2024 Logo" style="width:300px;">
+    </div>
+    <h1>Player vs. Player</h1>
+    <div class="comparison-container">
+        <div class="participant-container">
+            <label for="participant1">Select Participant 1:</label>
+            <select id="participant1" onchange="loadPredictions(1)">
+                <option value="">Select...</option>
+            </select>
+            <div id="predictions1"></div>
+        </div>
+        <div class="participant-container">
+            <label for="participant2">Select Participant 2:</label>
+            <select id="participant2" onchange="loadPredictions(2)">
+                <option value="">Select...</option>
+            </select>
+            <div id="predictions2"></div>
+        </div>
+        <div class="participant-container">
+            <label for="participant3">Select Participant 3:</label>
+            <select id="participant3" onchange="loadPredictions(3)">
+                <option value="">Select...</option>
+            </select>
+            <div id="predictions3"></div>
+        </div>
+    </div>
+
+    <script>
+        const flags = {
+            'Germany': 'https://flagcdn.com/w20/de.png',
+            'Scotland': 'https://flagcdn.com/w20/gb-sct.png',
+            'Hungary': 'https://flagcdn.com/w20/hu.png',
+            'Switzerland': 'https://flagcdn.com/w20/ch.png',
+            'Spain': 'https://flagcdn.com/w20/es.png',
+            'Croatia': 'https://flagcdn.com/w20/hr.png',
+            'Italy': 'https://flagcdn.com/w20/it.png',
+            'Albania': 'https://flagcdn.com/w20/al.png',
+            'Serbia': 'https://flagcdn.com/w20/rs.png',
+            'England': 'https://flagcdn.com/w20/gb-eng.png',
+            'Slovenia': 'https://flagcdn.com/w20/si.png',
+            'Denmark': 'https://flagcdn.com/w20/dk.png',
+            'Poland': 'https://flagcdn.com/w20/pl.png',
+            'Netherlands': 'https://flagcdn.com/w20/nl.png',
+            'Austria': 'https://flagcdn.com/w20/at.png',
+            'France': 'https://flagcdn.com/w20/fr.png',
+            'Romania': 'https://flagcdn.com/w20/ro.png',
+            'Ukraine': 'https://flagcdn.com/w20/ua.png',
+            'Belgium': 'https://flagcdn.com/w20/be.png',
+            'Slovakia': 'https://flagcdn.com/w20/sk.png',
+            'Turkey': 'https://flagcdn.com/w20/tr.png',
+            'Georgia': 'https://flagcdn.com/w20/ge.png',
+            'Portugal': 'https://flagcdn.com/w20/pt.png',
+            'Czechia': 'https://flagcdn.com/w20/cz.png'
+        };
+
+        const abbreviations = {
+            'Germany': 'GER',
+            'Scotland': 'SCO',
+            'Hungary': 'HUN',
+            'Switzerland': 'SUI',
+            'Spain': 'ESP',
+            'Croatia': 'CRO',
+            'Italy': 'ITA',
+            'Albania': 'ALB',
+            'Serbia': 'SRB',
+            'England': 'ENG',
+            'Slovenia': 'SVN',
+            'Denmark': 'DEN',
+            'Poland': 'POL',
+            'Netherlands': 'NED',
+            'Austria': 'AUT',
+            'France': 'FRA',
+            'Romania': 'ROU',
+            'Ukraine': 'UKR',
+            'Belgium': 'BEL',
+            'Slovakia': 'SVK',
+            'Turkey': 'TUR',
+            'Georgia': 'GEO',
+            'Portugal': 'POR',
+            'Czechia': 'CZE'
+        };
+
+        function populateDropdowns(participants) {
+            const dropdowns = [document.getElementById('participant1'), document.getElementById('participant2'), document.getElementById('participant3')];
+            participants.forEach(participant => {
+                dropdowns.forEach(dropdown => {
+                    const option = document.createElement('option');
+                    option.value = participant.scores;
+                    option.text = participant.name;
+                    dropdown.add(option);
+                });
+            });
+        }
+
+        function loadPredictions(participantNumber) {
+            const participantSelect = document.getElementById(`participant${participantNumber}`);
+            const selectedscores = participantSelect.value;
+            const predictionsDiv = document.getElementById(`predictions${participantNumber}`);
+            predictionsDiv.innerHTML = 'Loading...'; // Show a loading message
+            if (selectedscores) {
+                fetch(selectedscores)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.text();
+                    })
+                    .then(data => {
+                        const rows = data.split('\n').map(row => row.split(','));
+                        let tableHTML = '<table>';
+                        rows.forEach(row => {
+                            tableHTML += '<tr>';
+                            row.forEach(cell => {
+                                const cellContent = cell.trim();
+                                const flagImg = flags[cellContent] ? `<img src="${flags[cellContent]}" class="flag"> ` : '';
+                                const abbreviation = abbreviations[cellContent] ? abbreviations[cellContent] : cellContent;
+                                const boldText = [
+                                    'Group Stage', 'Group A', 'Group B', 'Group C', 'Group D', 'Group E', 'Group F',
+                                    'KO Stage', 'Round of 16', 'Quarterfinals', 'Semifinals', 'Final',
+                                    'Top Goalscorer', 'Best Goalkeeper', 'Player of Tournament', 'Top Players'
+                                ];
+                                const cellClass = boldText.includes(cellContent) ? 'bold-text' : '';
+                                tableHTML += `<td class="${cellClass}">${flagImg}${abbreviation}</td>`;
+                            });
+                            tableHTML += '</tr>';
+                        });
+                        tableHTML += '</table>';
+                        predictionsDiv.innerHTML = tableHTML;
+                    })
+                    .catch(error => {
+                        predictionsDiv.innerHTML = `Error loading predictions: ${error.message}`;
+                        console.error('Error details:', error);
+                    });
+            } else {
+                predictionsDiv.innerHTML = '';
+            }
+        }
+
+        // Fetch the JSON scores and populate dropdowns on page load
+        window.onload = function () {
+            fetch('./jsons/participants.json')
+                .then(response => response.json())
+                .then(data => populateDropdowns(data.participants))
+                .catch(error => console.error('Error loading participants list:', error));
+        };
+    </script>
+    <div class="footnote">
+        &copy; 2024. Website created by Nima N.
+    </div>
+</body>
+
+</html>

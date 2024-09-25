@@ -1,0 +1,76 @@
+Group Stage
+Group A,Team 1,,Team 2,,
+June 14,Germany,5,Scotland,1
+June 15,Hungary,1,Switzerland,3
+June 19,Scotland,1,Switzerland,1
+June 19,Germany,2,Hungary,0
+June 23,Switzerland,1,Germany,1
+June 23,Scotland,0,Hungary,1
+
+Group B
+June 15,Spain,3,Croatia,0
+June 15,Italy,2,Albania,1
+June 19,Croatia,2,Albania,2
+June 20,Spain,1,Italy,0
+June 24,Albania,0,Spain,1
+June 24,Croatia,1,Italy,1
+
+Group C
+June 16,Serbia,0,England,1
+June 16,Slovenia,1,Denmark,1
+June 20,Denmark,1,England,1
+June 20,Slovenia,1,Serbia,1
+June 25,England,0,Slovenia,0
+June 25,Denmark,0,Serbia,0
+
+Group D
+June 16,Poland,1,Netherlands,2
+June 17,Austria,0,France,1
+June 21,Poland,1,Austria,3
+June 21,Netherlands,0,France,0
+June 25,France,1,Poland,1
+June 25,Netherlands,2,Austria,3
+
+Group E
+June 17,Romania,3,Ukraine,0
+June 17,Belgium,0,Slovakia,1
+June 21,Slovakia,1,Ukraine,2
+June 22,Belgium,2,Romania,0
+June 26,Slovakia,1,Romania,1
+June 26,Ukraine,0,Belgium,0
+
+Group F
+June 18,Turkey,3,Georgia,1
+June 18,Portugal,2,Czechia,1
+June 22,Georgia,1,Czechia,1
+June 22,Portugal,3,Turkey,0
+June 26,Czechia,1,Turkey,2
+June 26,Georgia,2,Portugal,0
+
+KO Stage
+Round of 16,Team 1,Team 2,Winner,,
+June 30,Spain,Georgia,Spain
+June 29,Germany,Denmark,Germany
+July 1,England,Slovakia,England
+July 1,France,Belgium,France
+July 2,Romania,Netherlands,Netherlands
+July 2,Austria,Turkey,Turkey
+June 30,Portugal,Slovenia,Portugal
+June 29,Switzerland,Italy,Switzerland
+
+Quarterfinals
+July 5,Spain,Germany,Spain
+July 5,England,Switzerland,England
+July 6,Netherlands,Turkey,Netherlands
+July 6,Portugal,France,France
+
+Semifinals
+July 9,England,Netherlands,England
+July 10,France,Spain,Spain
+
+Final
+July 14,Spain,England,Spain
+
+Top Players
+Top Goalscorer,Kane
+Player of Tournament,Rodri

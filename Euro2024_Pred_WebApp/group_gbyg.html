@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="./logos/favicon.png">
+    <title>Game by Game Results</title>
+    <style>
+        body {
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            margin: 10px;
+            background-color: #1e1e1e;
+            color: #7c7a7a;
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .dropdown-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        select {
+            width: 200px;
+            background-color: #6b6a6a;
+            color: #fff;
+            border: 1px solid #444444;
+            margin: 10px;
+            height: 36px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid black;
+        }
+
+        th,
+        td {
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #333333;
+        }
+
+        th:first-child {
+            width: 10%;
+        }
+
+        .center {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .center h2 {
+            display: inline-block;
+            margin: 0;
+        }
+
+        .center img {
+            vertical-align: middle;
+        }
+
+        .menu-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .menu {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .menu li {
+            display: inline;
+            margin-left: 20px;
+        }
+
+        .menu li a {
+            color: #7c7a7a;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .error-message {
+            color: red;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .footnote {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.8em;
+            color: #484747;
+            background-color: 1e1e1e;
+            padding: 5px;
+            border-radius: 3px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="menu-container">
+        <ul class="menu">
+            <li><a href="./ranks.html">Rankings</a></li>
+            <li><a href="./comp2euros.html">Euro2024 Results</a></li>
+            <li><a href="./group_gbyg.html">Group Stages Results</a></li>
+            <li><a href="./KOscores.html">KO Stages Results</a></li>
+            <li><a href="./pvsp.html">Player vs Player</a></li>
+            <li><a href="./all_predictions.html">Download All Predictions</a></li>
+            <li><a href="./predictform.html">Prediction Form</a></li>
+            <li><a href="./rules.html">Points System</a></li>
+            <li><a href="./widget.html">Widget</a></li>
+        </ul>
+    </div>
+    <div class="logo-container">
+        <img src="./logos/logo.png" alt="Euro 2024 Logo" style="width:300px;">
+    </div>
+    <div class="dropdown-container">
+        <label for="country1-1">Country 1:</label>
+        <select id="country1-1">
+            <option value="">Select...</option>
+        </select>
+        <label for="country2-1">Country 2:</label>
+        <select id="country2-1">
+            <option value="">Select...</option>
+        </select>
+    </div>
+    <div class="dropdown-container">
+        <label for="country1-2">Country 1:</label>
+        <select id="country1-2">
+            <option value="">Select...</option>
+        </select>
+        <label for="country2-2">Country 2:</label>
+        <select id="country2-2">
+            <option value="">Select...</option>
+        </select>
+    </div>
+    <div class="dropdown-container">
+        <label for="country1-3">Country 1:</label>
+        <select id="country1-3">
+            <option value="">Select...</option>
+        </select>
+        <label for="country2-3">Country 2:</label>
+        <select id="country2-3">
+            <option value="">Select...</option>
+        </select>
+    </div>
+    <div class="dropdown-container">
+        <label for="country1-4">Country 1:</label>
+        <select id="country1-4">
+            <option value="">Select...</option>
+        </select>
+        <label for="country2-4">Country 2:</label>
+        <select id="country2-4">
+            <option value="">Select...</option>
+        </select>
+    </div>
+
+    <div id="error-message" class="error-message"></div>
+
+    <div id="resultsContainer-1" class="center"></div>
+    <div id="resultsContainer-2" class="center"></div>
+    <div id="resultsContainer-3" class="center"></div>
+    <div id="resultsContainer-4" class="center"></div>
+
+    <script>
+        const countries = {
+            'Germany': 'https://flagcdn.com/w20/de.png',
+            'Scotland': 'https://flagcdn.com/w20/gb-sct.png',
+            'Hungary': 'https://flagcdn.com/w20/hu.png',
+            'Switzerland': 'https://flagcdn.com/w20/ch.png',
+            'Spain': 'https://flagcdn.com/w20/es.png',
+            'Croatia': 'https://flagcdn.com/w20/hr.png',
+            'Italy': 'https://flagcdn.com/w20/it.png',
+            'Albania': 'https://flagcdn.com/w20/al.png',
+            'Serbia': 'https://flagcdn.com/w20/rs.png',
+            'England': 'https://flagcdn.com/w20/gb-eng.png',
+            'Slovenia': 'https://flagcdn.com/w20/si.png',
+            'Denmark': 'https://flagcdn.com/w20/dk.png',
+            'Poland': 'https://flagcdn.com/w20/pl.png',
+            'Netherlands': 'https://flagcdn.com/w20/nl.png',
+            'Austria': 'https://flagcdn.com/w20/at.png',
+            'France': 'https://flagcdn.com/w20/fr.png',
+            'Romania': 'https://flagcdn.com/w20/ro.png',
+            'Ukraine': 'https://flagcdn.com/w20/ua.png',
+            'Belgium': 'https://flagcdn.com/w20/be.png',
+            'Slovakia': 'https://flagcdn.com/w20/sk.png',
+            'Turkey': 'https://flagcdn.com/w20/tr.png',
+            'Georgia': 'https://flagcdn.com/w20/ge.png',
+            'Portugal': 'https://flagcdn.com/w20/pt.png',
+            'Czechia': 'https://flagcdn.com/w20/cz.png'
+        };
+
+        document.addEventListener('DOMContentLoaded', function () {
+            for (let i = 1; i <= 4; i++) {
+                const country1Select = document.getElementById(`country1-${i}`);
+                const country2Select = document.getElementById(`country2-${i}`);
+
+                for (const country in countries) {
+                    const option1 = document.createElement('option');
+                    option1.value = country;
+                    option1.text = country;
+                    country1Select.add(option1);
+
+                    const option2 = document.createElement('option');
+                    option2.value = country;
+                    option2.text = country;
+                    country2Select.add(option2);
+                }
+
+                country1Select.addEventListener('change', () => showPredictions(i));
+                country2Select.addEventListener('change', () => showPredictions(i));
+            }
+        });
+
+        async function showPredictions(moduleNumber) {
+            const country1 = document.getElementById(`country1-${moduleNumber}`).value;
+            const country2 = document.getElementById(`country2-${moduleNumber}`).value;
+            const errorMessage = document.getElementById('error-message');
+            const resultsContainer = document.getElementById(`resultsContainer-${moduleNumber}`);
+            resultsContainer.innerHTML = '';
+            errorMessage.innerHTML = '';
+
+            if (!country1 || !country2) {
+                return;
+            }
+
+            if (country1 === country2) {
+                errorMessage.innerHTML = `The name of the two countries should be different for set ${moduleNumber}.`;
+                return;
+            }
+
+            const response = await fetch('./jsons/participants.json');
+            const participants = await response.json();
+
+            const actualResultsResponse = await fetch('./results_csv/Actual_Results.csv');
+            const actualResultsData = await actualResultsResponse.text();
+            const actualResultsRows = actualResultsData.split('\n').map(row => row.split(','));
+
+            let actualResult = ['', ''];
+
+            for (const row of actualResultsRows) {
+                if (row.includes(country1) && row.includes(country2)) {
+                    const country1Index = row.indexOf(country1);
+                    const country2Index = row.indexOf(country2);
+                    actualResult[0] = row[country1Index + 1];
+                    actualResult[1] = row[country2Index + 1];
+                    break;
+                }
+            }
+
+            let headerHTML = `<h2><img src="${countries[country1]}" alt="${country1} flag"> ${country1} ${actualResult[0]} - ${actualResult[1]} ${country2} <img src="${countries[country2]}" alt="${country2} flag"></h2>`;
+            let tableHTML = '<table>';
+            tableHTML += '<tr><th>Participant</th>';
+            participants.participants.forEach(participant => {
+                tableHTML += `<th colspan="2">${participant.name}</th>`;
+            });
+            tableHTML += '</tr>';
+            tableHTML += '<tr><th>Teams</th>';
+            participants.participants.forEach(participant => {
+                tableHTML += `<td><img src="${countries[country1]}" alt="${country1} flag"></td><td><img src="${countries[country2]}" alt="${country2} flag"></td>`;
+            });
+            tableHTML += '</tr>';
+            tableHTML += '<tr><th>Predicted Scores</th>';
+            let scoresRowHTML = '<tr><th>Scores</th>';
+            let matchFound = false;
+
+            for (const participant of participants.participants) {
+                const csvResponse = await fetch(participant.scores);
+                const csvData = await csvResponse.text();
+                const rows = csvData.split('\n').map(row => row.split(','));
+
+                let participantPrediction = '';
+                let participantScore = 0;
+                for (const row of rows) {
+                    if (row.includes(country1) && row.includes(country2)) {
+                        const country1Index = row.indexOf(country1);
+                        const country2Index = row.indexOf(country2);
+                        const country1Score = row[country1Index + 1];
+                        const country2Score = row[country2Index + 1];
+                        participantPrediction = [country1Score, country2Score];
+                        matchFound = true;
+
+                        // Calculate score
+                        const actualScore1 = parseInt(actualResult[0]);
+                        const actualScore2 = parseInt(actualResult[1]);
+                        const predictedScore1 = parseInt(country1Score);
+                        const predictedScore2 = parseInt(country2Score);
+
+                        if (predictedScore1 === actualScore1 && predictedScore2 === actualScore2) {
+                            participantScore = 10;
+                        } else if ((actualScore1 - actualScore2 === predictedScore1 - predictedScore2) && (actualScore1 > actualScore2 && predictedScore1 > predictedScore2 || actualScore1 < actualScore2 && predictedScore1 < predictedScore2)) {
+                            participantScore = 8;
+                        } else if (actualScore1 === actualScore2 && predictedScore1 === predictedScore2) {
+                            participantScore = 5;
+                        } else if ((actualScore1 > actualScore2 && predictedScore1 > predictedScore2) || (actualScore1 < actualScore2 && predictedScore1 < predictedScore2)) {
+                            participantScore = 5;
+                        } else {
+                            participantScore = 0;
+                        }
+                        break;
+                    }
+                }
+                if (participantPrediction.length > 0) {
+                    tableHTML += `<td>${participantPrediction[0]}</td><td>${participantPrediction[1]}</td>`;
+                } else {
+                    tableHTML += '<td>N/A</td><td>N/A></td>';
+                }
+                scoresRowHTML += `<td colspan="2">${participantScore}</td>`;
+            }
+
+            tableHTML += '</tr>';
+            tableHTML += scoresRowHTML + '</tr>';
+            tableHTML += '</table>';
+
+            if (!matchFound) {
+                resultsContainer.innerHTML = `<p>No matches found between ${country1} and ${country2} in participant predictions.</p>`;
+            } else {
+                resultsContainer.innerHTML = headerHTML + tableHTML;
+
+                // Set dynamic column widths
+                const numParticipants = participants.participants.length;
+                const remainingWidth = 90;
+                const columnWidth = remainingWidth / (numParticipants * 2);
+                const thElements = resultsContainer.querySelectorAll('th[colspan="2"]');
+                thElements.forEach(th => {
+                    th.style.width = `${columnWidth}%`;
+                });
+            }
+        }
+    </script>
+    <div class="footnote">
+        &copy; 2024. Website created by Nima N.
+    </div>
+</body>
+
+</html>

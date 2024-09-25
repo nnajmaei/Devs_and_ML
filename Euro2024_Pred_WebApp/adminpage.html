@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="./logos/favicon.png">
+    <title>Admin Page</title>
+    <style>
+        body {
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            margin: 10px;
+            background-color: #1e1e1e;
+            color: #7c7a7a;
+            text-align: center;
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .center {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        button {
+            background-color: rgb(88, 87, 87);
+            color: black;
+            padding: 5px 5px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border: none;
+        }
+
+        .menu-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .menu {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .menu li {
+            display: inline;
+            margin-left: 20px;
+        }
+
+        .menu li a {
+            color: #7c7a7a;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .footnote {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.8em;
+            color: #484747;
+            background-color: 1e1e1e;
+            padding: 5px;
+            border-radius: 3px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+
+        select {
+            background-color: #fff;
+            color: #000;
+            padding: 10px 20px;
+            margin-top: 10px;
+            border: 1px solid #444444;
+            cursor: pointer;
+            height: 36px;
+        }
+
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+            width: 50%;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #7c7a7a;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        #scoresTableContainer {
+            background-color: #1e1e1e;
+            color: #7c7a7a;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        .dropdown-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        select {
+            width: 200px;
+            background-color: #6b6a6a;
+            color: #fff;
+            border: 1px solid #444444;
+            margin: 10px;
+            height: 36px;
+        }
+
+        .error-message {
+            color: red;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .capture-button {
+            background-color: rgb(88, 87, 87);
+            color: black;
+            padding: 5px 5px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border: none;
+        }
+
+        #results-container {
+            background-color: #1e1e1e;
+            color: #7c7a7a;
+            padding: 20px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="menu-container">
+        <ul class="menu">
+            <li><a href="./ranks.html">Rankings</a></li>
+            <li><a href="./comp2euros.html">Euro2024 Results</a></li>
+            <li><a href="./all_predictions.html">Game by Game Points</a></li>
+            <li><a href="./pvsp.html">Player vs Player</a></li>
+            <li><a href="./all_predictions.html">Download All Predictions</a></li>
+            <li><a href="./predictform.html">Prediction Form</a></li>
+            <li><a href="./rules.html">Points System</a></li>
+            <li><a href="./widget.html">Widget</a></li>
+        </ul>
+    </div>
+    <div class="logo-container">
+        <img src="./logos/logo.png" alt="Euro 2024 Logo" style="width:300px;">
+    </div>
+    <hr>
+    <h2>Update Score Cards</h2>
+    <div class="center">
+        <button onclick="generateScoresCSV()">Generate Scores CSV</button>
+    </div>
+    <hr>
+    <script>
+        async function generateScoresCSV() {
+            try {
+                const response = await fetch('./jsons/participants.json');
+                const participants = await response.json();
+
+                const actualResultsResponse = await fetch('./results_csv/Actual_Results.csv');
+                const actualResultsData = await actualResultsResponse.text();
+                const actualResultsRows = actualResultsData.split('\n').map(row => row.split(','));
+
+                for (const participant of participants.participants) {
+                    let participantCSV = '';
+
+                    const csvResponse = await fetch(participant.file);
+                    const csvData = await csvResponse.text();
+                    const participantRows = csvData.split('\n').map(row => row.split(','));
+
+                    participantCSV += 'Group Stage\n'
+                    participantCSV += 'Group A,Team 1,,Team 2,,Point\n'
+
+                    for (let i = 2; i < 8; i++) {
+                        const row = actualResultsRows[i];
+                        const date = row[0];
+                        const team1 = row[1] || '';
+                        const team2 = row[3] || '';
+                        const actualScore1 = row[2] || '';
+                        const actualScore2 = row[4] || '';
+
+                        let participantScore = '';
+                        let predictedScore1 = '';
+                        let predictedScore2 = '';
+
+                        for (const pRow of participantRows) {
+                            if (pRow.includes(team1) && pRow.includes(team2)) {
+                                const country1Index = pRow.indexOf(team1);
+                                const country2Index = pRow.indexOf(team2);
+                                predictedScore1 = pRow[country1Index + 1];
+                                predictedScore2 = pRow[country2Index + 1];
+                                if (actualScore1 && actualScore2) {
+                                    const actual1 = parseInt(actualScore1);
+                                    const actual2 = parseInt(actualScore2);
+                                    const predicted1 = parseInt(predictedScore1);
+                                    const predicted2 = parseInt(predictedScore2);
+
+                                    if (predicted1 === actual1 && predicted2 === actual2) {
+                                        participantScore = 10;
+                                    } else if ((actual1 - actual2 === predicted1 - predicted2) &&
+                                        ((actual1 > actual2 && predicted1 > predicted2) || (actual1 < actual2 && predicted1 < predicted2))) {
+                                        participantScore = 8;
+                                    } else if (actual1 === actual2 && predicted1 === predicted2) {
+                                        participantScore = 5;
+                                    } else if ((actual1 > actual2 && predicted1 > predicted2) || (actual1 < actual2 && predicted1 < predictedScore2)) {
+                                        participantScore = 5;
+                                    } else {
+                                        participantScore = 0;
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                        participantCSV += `${date},${team1},${predictedScore1},${team2},${predictedScore2},${participantScore}\n`;
+                    }
+
+                    participantCSV += "\n"
+                    participantCSV += "Group B\n"
+
+                    for (let i = 10; i < 16; i++) {
+                        const row = actualResultsRows[i];
+                        const date = row[0];
+                        const team1 = row[1] || '';
+                        const team2 = row[3] || '';
+                        const actualScore1 = row[2] || '';
+                        const actualScore2 = row[4] || '';
+
+                        let participantScore = '';
+                        let predictedScore1 = '';
+                        let predictedScore2 = '';
+
+                        for (const pRow of participantRows) {
+                            if (pRow.includes(team1) && pRow.includes(team2)) {
+                                const country1Index = pRow.indexOf(team1);
+                                const country2Index = pRow.indexOf(team2);
+                                predictedScore1 = pRow[country1Index + 1];
+                                predictedScore2 = pRow[country2Index + 1];
+                                if (actualScore1 && actualScore2) {
+                                    const actual1 = parseInt(actualScore1);
+                                    const actual2 = parseInt(actualScore2);
+                                    const predicted1 = parseInt(predictedScore1);
+                                    const predicted2 = parseInt(predictedScore2);
+
+                                    if (predicted1 === actual1 && predicted2 === actual2) {
+                                        participantScore = 10;
+                                    } else if ((actual1 - actual2 === predicted1 - predicted2) &&
+                                        ((actual1 > actual2 && predicted1 > predicted2) || (actual1 < actual2 && predicted1 < predicted2))) {
+                                        participantScore = 8;
+                                    } else if (actual1 === actual2 && predicted1 === predicted2) {
+                                        participantScore = 5;
+                                    } else if ((actual1 > actual2 && predicted1 > predicted2) || (actual1 < actual2 && predicted1 < predictedScore2)) {
+                                        participantScore = 5;
+                                    } else {
+                                        participantScore = 0;
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                        participantCSV += `${date},${team1},${predictedScore1},${team2},${predictedScore2},${participantScore}\n`;
+                    }
+
+                    participantCSV += "\n"
+                    participantCSV += "Group C\n"
+
+                    for (let i = 18; i < 24; i++) {
+                        const row = actualResultsRows[i];
+                        const date = row[0];
+                        const team1 = row[1] || '';
+                        const team2 = row[3] || '';
+                        const actualScore1 = row[2] || '';
+                        const actualScore2 = row[4] || '';
+
+                        let participantScore = '';
+                        let predictedScore1 = '';
+                        let predictedScore2 = '';
+
+                        for (const pRow of participantRows) {
+                            if (pRow.includes(team1) && pRow.includes(team2)) {
+                                const country1Index = pRow.indexOf(team1);
+                                const country2Index = pRow.indexOf(team2);
+                                predictedScore1 = pRow[country1Index + 1];
+                                predictedScore2 = pRow[country2Index + 1];
+                                if (actualScore1 && actualScore2) {
+                                    const actual1 = parseInt(actualScore1);
+                                    const actual2 = parseInt(actualScore2);
+                                    const predicted1 = parseInt(predictedScore1);
+                                    const predicted2 = parseInt(predictedScore2);
+
+                                    if (predicted1 === actual1 && predicted2 === actual2) {
+                                        participantScore = 10;
+                                    } else if ((actual1 - actual2 === predicted1 - predicted2) &&
+                                        ((actual1 > actual2 && predicted1 > predicted2) || (actual1 < actual2 && predicted1 < predicted2))) {
+                                        participantScore = 8;
+                                    } else if (actual1 === actual2 && predicted1 === predicted2) {
+                                        participantScore = 5;
+                                    } else if ((actual1 > actual2 && predicted1 > predicted2) || (actual1 < actual2 && predicted1 < predictedScore2)) {
+                                        participantScore = 5;
+                                    } else {
+                                        participantScore = 0;
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                        participantCSV += `${date},${team1},${predictedScore1},${team2},${predictedScore2},${participantScore}\n`;
+                    }
+
+                    participantCSV += "\n"
+                    participantCSV += "Group D\n"
+
+                    for (let i = 26; i < 32; i++) {
+                        const row = actualResultsRows[i];
+                        const date = row[0];
+                        const team1 = row[1] || '';
+                        const team2 = row[3] || '';
+                        const actualScore1 = row[2] || '';
+                        const actualScore2 = row[4] || '';
+
+                        let participantScore = '';
+                        let predictedScore1 = '';
+                        let predictedScore2 = '';
+
+                        for (const pRow of participantRows) {
+                            if (pRow.includes(team1) && pRow.includes(team2)) {
+                                const country1Index = pRow.indexOf(team1);
+                                const country2Index = pRow.indexOf(team2);
+                                predictedScore1 = pRow[country1Index + 1];
+                                predictedScore2 = pRow[country2Index + 1];
+                                if (actualScore1 && actualScore2) {
+                                    const actual1 = parseInt(actualScore1);
+                                    const actual2 = parseInt(actualScore2);
+                                    const predicted1 = parseInt(predictedScore1);
+                                    const predicted2 = parseInt(predictedScore2);
+
+                                    if (predicted1 === actual1 && predicted2 === actual2) {
+                                        participantScore = 10;
+                                    } else if ((actual1 - actual2 === predicted1 - predicted2) &&
+                                        ((actual1 > actual2 && predicted1 > predicted2) || (actual1 < actual2 && predicted1 < predicted2))) {
+                                        participantScore = 8;
+                                    } else if (actual1 === actual2 && predicted1 === predicted2) {
+                                        participantScore = 5;
+                                    } else if ((actual1 > actual2 && predicted1 > predicted2) || (actual1 < actual2 && predicted1 < predicted2)) {
+                                        participantScore = 5;
+                                    } else {
+                                        participantScore = 0;
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                        participantCSV += `${date},${team1},${predictedScore1},${team2},${predictedScore2},${participantScore}\n`;
+                    }
+
+                    participantCSV += "\n"
+                    participantCSV += "Group E\n"
+
+                    for (let i = 34; i < 40; i++) {
+                        const row = actualResultsRows[i];
+                        const date = row[0];
+                        const team1 = row[1] || '';
+                        const team2 = row[3] || '';
+                        const actualScore1 = row[2] || '';
+                        const actualScore2 = row[4] || '';
+
+                        let participantScore = '';
+                        let predictedScore1 = '';
+                        let predictedScore2 = '';
+
+                        for (const pRow of participantRows) {
+                            if (pRow.includes(team1) && pRow.includes(team2)) {
+                                const country1Index = pRow.indexOf(team1);
+                                const country2Index = pRow.indexOf(team2);
+                                predictedScore1 = pRow[country1Index + 1];
+                                predictedScore2 = pRow[country2Index + 1];
+                                if (actualScore1 && actualScore2) {
+                                    const actual1 = parseInt(actualScore1);
+                                    const actual2 = parseInt(actualScore2);
+                                    const predicted1 = parseInt(predictedScore1);
+                                    const predicted2 = parseInt(predictedScore2);
+
+                                    if (predicted1 === actual1 && predicted2 === actual2) {
+                                        participantScore = 10;
+                                    } else if ((actual1 - actual2 === predicted1 - predicted2) &&
+                                        ((actual1 > actual2 && predicted1 > predicted2) || (actual1 < actual2 && predicted1 < predicted2))) {
+                                        participantScore = 8;
+                                    } else if (actual1 === actual2 && predicted1 === predicted2) {
+                                        participantScore = 5;
+                                    } else if ((actual1 > actual2 && predicted1 > predictedScore2) || (actual1 < actual2 && predicted1 < predictedScore2)) {
+                                        participantScore = 5;
+                                    } else {
+                                        participantScore = 0;
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                        participantCSV += `${date},${team1},${predictedScore1},${team2},${predictedScore2},${participantScore}\n`;
+                    }
+
+                    participantCSV += "\n"
+                    participantCSV += "Group F\n"
+
+                    for (let i = 42; i < 48; i++) {
+                        const row = actualResultsRows[i];
+                        const date = row[0];
+                        const team1 = row[1] || '';
+                        const team2 = row[3] || '';
+                        const actualScore1 = row[2] || '';
+                        const actualScore2 = row[4] || '';
+
+                        let participantScore = '';
+                        let predictedScore1 = '';
+                        let predictedScore2 = '';
+
+                        for (const pRow of participantRows) {
+                            if (pRow.includes(team1) && pRow.includes(team2)) {
+                                const country1Index = pRow.indexOf(team1);
+                                const country2Index = pRow.indexOf(team2);
+                                predictedScore1 = pRow[country1Index + 1];
+                                predictedScore2 = pRow[country2Index + 1];
+                                if (actualScore1 && actualScore2) {
+                                    const actual1 = parseInt(actualScore1);
+                                    const actual2 = parseInt(actualScore2);
+                                    const predicted1 = parseInt(predictedScore1);
+                                    const predicted2 = parseInt(predictedScore2);
+
+                                    if (predicted1 === actual1 && predicted2 === actual2) {
+                                        participantScore = 10;
+                                    } else if ((actual1 - actual2 === predicted1 - predicted2) &&
+                                        ((actual1 > actual2 && predicted1 > predicted2) || (actual1 < actual2 && predicted1 < predicted2))) {
+                                        participantScore = 8;
+                                    } else if (actual1 === actual2 && predicted1 === predicted2) {
+                                        participantScore = 5;
+                                    } else if ((actual1 > actual2 && predicted1 > predicted2) || (actual1 < actual2 && predicted1 < predicted2)) {
+                                        participantScore = 5;
+                                    } else {
+                                        participantScore = 0;
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                        participantCSV += `${date},${team1},${predictedScore1},${team2},${predictedScore2},${participantScore}\n`;
+                    }
+
+                    participantCSV += "\n"
+                    participantCSV += "KO Stage\n"
+                    participantCSV += 'Round of 16,Team 1,Team 2,Winner,,Point\n'
+
+                    for (let i = 51; i < 59; i++) {
+                        const row = participantRows[i];
+                        if (!row) continue;
+                        const date = row[0];
+                        const predictedTeam1 = row[1];
+                        const predictedTeam2 = row[2];
+                        const predictedWinner = row[3];
+                        let score = '';
+
+                        if (predictedWinner) {
+                            for (let j = 61; j <= 64; j++) {
+                                const actualResultRow = actualResultsRows[j];
+                                if (actualResultRow.includes(predictedWinner)) {
+                                    score = 20;
+                                    break;
+                                } else {
+                                    score = 0;
+                                }
+                            }
+                        }
+                        participantCSV += `${date},${predictedTeam1},${predictedTeam2},${predictedWinner},,${score}\n`;
+                    }
+
+                    participantCSV += "\n"
+                    participantCSV += "Quarterfinals\n"
+
+                    for (let i = 61; i < 65; i++) {
+                        const row = participantRows[i];
+                        if (!row) continue;
+                        const date = row[0];
+                        const predictedTeam1 = row[1];
+                        const predictedTeam2 = row[2];
+                        const predictedWinner = row[3];
+                        let score = '';
+
+                        if (predictedWinner) {
+                            for (let j = 67; j <= 68; j++) {
+                                const actualResultRow = actualResultsRows[j];
+                                if (actualResultRow.includes(predictedWinner)) {
+                                    score = 40;
+                                    break;
+                                } else {
+                                    score = 0;
+                                }
+                            }
+                        }
+                        participantCSV += `${date},${predictedTeam1},${predictedTeam2},${predictedWinner},,${score}\n`;
+                    }
+
+                    participantCSV += "\n"
+                    participantCSV += "Semifinals\n"
+
+                    for (let i = 67; i < 69; i++) {
+                        const row = participantRows[i];
+                        if (!row) continue;
+                        const date = row[0];
+                        const predictedTeam1 = row[1];
+                        const predictedTeam2 = row[2];
+                        const predictedWinner = row[3];
+                        let score = '';
+
+                        if (predictedWinner) {
+                            const actualResultRow = actualResultsRows[71];
+                            if (actualResultRow.includes(predictedWinner)) {
+                                score = 60;
+                            } else {
+                                score = 0;
+                            }
+                        }
+                        participantCSV += `${date},${predictedTeam1},${predictedTeam2},${predictedWinner},,${score}\n`;
+                    }
+
+                    participantCSV += "\n"
+                    participantCSV += "Final\n"
+
+                    // Process line 72
+                    const row = participantRows[71]; // Row 72 in the file (0-based index 71)
+                    const date = row[0];
+                    const predictedTeam1 = row[1];
+                    const predictedTeam2 = row[2];
+                    const predictedWinner = row[3];
+                    let score = '';
+
+                    if (predictedWinner) {
+                        const actualResultRow = actualResultsRows[71]; // Row 72 in the file (0-based index 71)
+                        if (actualResultRow[3] && actualResultRow[3].includes(predictedWinner)) {
+                            score = 80;
+                        } else {
+                            score = 0;
+                        }
+                    }
+                    participantCSV += `${date},${predictedTeam1},${predictedTeam2},${predictedWinner},,${score}\n`;
+
+                    participantCSV += "\n"
+                    participantCSV += "Top Players\n"
+
+                    for (let i = 74; i < 77; i++) {
+                        const row = participantRows[i];
+                        if (!row) continue;
+                        const date = row[0];
+                        const predictedPlayer = row[1];
+                        let score = '';
+
+                        if (predictedPlayer) {
+                            const actualResultRow = actualResultsRows[i];
+                            if (actualResultRow[1] && actualResultRow[1].includes(predictedPlayer)) {
+                                score = 80;
+                            } else {
+                                score = 0;
+                            }
+                        }
+                        participantCSV += `${date},${predictedPlayer},,,,${score}\n`;
+                    }
+
+                    const participantNameForFilename = participant.name.replace(/ /g, '_');
+                    downloadCSV(participantCSV, `${participantNameForFilename}_scores.csv`);
+                }
+
+            } catch (error) {
+                console.error('Error generating scores CSV:', error);
+            }
+        }
+
+        function downloadCSV(csv, filename) {
+            const csvBlob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(csvBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    </script>
+    <hr>
+    <div class="footnote">
+        &copy; 2024. Website created by Nima N.
+    </div>
+</body>
+
+</html>

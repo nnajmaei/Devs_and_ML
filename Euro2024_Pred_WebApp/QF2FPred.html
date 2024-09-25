@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="./logos/favicon.png">
+    <title>Euro2024 Predictions</title>
+    <style>
+        body {
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            margin: 10px;
+            background-color: #1e1e1e;
+            color: #7c7a7a;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+            vertical-align: top;
+            justify-content: center;
+        }
+
+        th,
+        td {
+            padding: 8px;
+            text-align: left;
+            border: none;
+            /* Removed the border */
+        }
+
+        th {
+            background-color: #333333;
+        }
+
+        input[type="number"],
+        input[type="text"] {
+            width: 150px;
+            background-color: #6b6a6a;
+            color: #fff;
+            border: 1px solid #444444;
+        }
+
+        select {
+            width: 150px;
+            background-color: #6b6a6a;
+        }
+
+        .flag {
+            height: 20px;
+            width: 30px;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        .group-title {
+            text-align: left;
+            margin-top: 10px;
+            font-size: 15px;
+            font-weight: bold;
+            clear: both;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .group-ranking,
+        .knockout-stage {
+            width: 50%;
+            margin: 0 auto;
+            vertical-align: top;
+            align-content: center;
+        }
+
+        .highlight {
+            background-color: #013f01;
+            /* Light green */
+        }
+
+        .team-cell {
+            text-align: left;
+        }
+
+        hr {
+            border: 0.5px solid #444444;
+            border-width: 2px;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: rgb(88, 87, 87);
+            color: black;
+            padding: 5px 5px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border: none;
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .form-container div {
+            display: flex;
+            justify-content: left;
+            align-items: left;
+        }
+
+        .form-container label {
+            width: 150px;
+        }
+
+        .footnote {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.8em;
+            color: #484747;
+            background-color: 1e1e1e;
+            padding: 5px;
+            border-radius: 3px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .menu-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .menu {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .menu li {
+            display: inline;
+            margin-left: 20px;
+        }
+
+        .menu li a {
+            color: #7c7a7a;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="menu-container">
+        <ul class="menu">
+            <li><a href="./ranks.html">Rankings</a></li>
+            <li><a href="./comp2euros.html">Euro2024 Results</a></li>
+            <li><a href="./group_gbyg.html">Group Stages Results</a></li>
+            <li><a href="./KOscores.html">KO Stages Results</a></li>
+            <li><a href="./pvsp.html">Player vs Player</a></li>
+            <li><a href="./all_predictions.html">Download All Predictions</a></li>
+            <li><a href="./predictform.html">Prediction Form</a></li>
+            <li><a href="./rules.html">Points System</a></li>
+            <li><a href="./widget.html">Widget</a></li>
+        </ul>
+    </div>
+
+    <div class="logo-container">
+        <img src="./logos/logo.png" alt="Euro 2024 Logo" style="width:300px;">
+    </div>
+
+    <div class="form-container">
+        <div>
+            <label for="participantSelect">Select Participant:</label>
+            <select id="participantSelect" onchange="loadParticipantPredictions()">
+                <option value="">Select Participant</option>
+            </select>
+        </div>
+    </div>
+
+    <hr>
+
+    <h2>Quarterfinal</h2>
+    <table id="quarter-finals" class="knockout-stage">
+        <tr>
+            <th>Date</th>
+            <th>Team 1</th>
+            <th>Team 2</th>
+            <th>Winner</th>
+        </tr>
+        <tr>
+            <td>July 5</td>
+            <td id="qf1"></td>
+            <td id="qf1-2"></td>
+            <td><select id="winnerQF1" onchange="updateSemiFinals()">
+                    <option value=""></option>
+                </select></td>
+        </tr>
+        <tr>
+            <td>July 5</td>
+            <td id="qf2"></td>
+            <td id="qf2-2"></td>
+            <td><select id="winnerQF2" onchange="updateSemiFinals()">
+                    <option value=""></option>
+                </select></td>
+        </tr>
+        <tr>
+            <td>July 6</td>
+            <td id="qf3"></td>
+            <td id="qf3-2"></td>
+            <td><select id="winnerQF3" onchange="updateSemiFinals()">
+                    <option value=""></option>
+                </select></td>
+        </tr>
+        <tr>
+            <td>July 6</td>
+            <td id="qf4"></td>
+            <td id="qf4-2"></td>
+            <td><select id="winnerQF4" onchange="updateSemiFinals()">
+                    <option value=""></option>
+                </select></td>
+        </tr>
+    </table>
+    <hr>
+    <h2>Semifinal</h2>
+    <table id="semi-finals" class="knockout-stage">
+        <tr>
+            <th>Date</th>
+            <th>Team 1</th>
+            <th>Team 2</th>
+            <th>Winner</th>
+        </tr>
+        <tr>
+            <td>July 9</td>
+            <td id="sf1"></td>
+            <td id="sf1-2"></td>
+            <td><select id="winnerSF1" onchange="updateFinal()">
+                    <option value=""></option>
+                </select></td>
+        </tr>
+        <tr>
+            <td>July 10</td>
+            <td id="sf2"></td>
+            <td id="sf2-2"></td>
+            <td><select id="winnerSF2" onchange="updateFinal()">
+                    <option value=""></option>
+                </select></td>
+        </tr>
+    </table>
+    <hr>
+    <h2>Final Pairing</h2>
+    <table id="final" class="knockout-stage">
+        <tr>
+            <th>Date</th>
+            <th>Team 1</th>
+            <th>Team 2</th>
+            <th>Champion</th>
+        </tr>
+        <tr>
+            <td>July 14</td>
+            <td id="final1"></td>
+            <td id="final2"></td>
+            <td><select id="champion">
+                    <option value=""></option>
+                </select></td>
+        </tr>
+    </table>
+
+    <hr>
+
+    <div class="button-container">
+        <button onclick="saveCSV()">Complete Predictions and Save as CSV to Send</button>
+    </div>
+
+    <body>
+        <p style="font-size: 20px;">
+            After entering and finalizing all of your predictions, click on the above button to save the CSV file. Once
+            saved, email the file to <span style="color: red;">nima.najmaei@gmail.com</span>.
+        </p>
+    </body>
+
+    <script>
+        const flags = {
+            'Germany': 'https://flagcdn.com/w20/de.png',
+            'Scotland': 'https://flagcdn.com/w20/gb-sct.png',
+            'Hungary': 'https://flagcdn.com/w20/hu.png',
+            'Switzerland': 'https://flagcdn.com/w20/ch.png',
+            'Spain': 'https://flagcdn.com/w20/es.png',
+            'Croatia': 'https://flagcdn.com/w20/hr.png',
+            'Italy': 'https://flagcdn.com/w20/it.png',
+            'Albania': 'https://flagcdn.com/w20/al.png',
+            'Serbia': 'https://flagcdn.com/w20/rs.png',
+            'England': 'https://flagcdn.com/w20/gb-eng.png',
+            'Slovenia': 'https://flagcdn.com/w20/si.png',
+            'Denmark': 'https://flagcdn.com/w20/dk.png',
+            'Poland': 'https://flagcdn.com/w20/pl.png',
+            'Netherlands': 'https://flagcdn.com/w20/nl.png',
+            'Austria': 'https://flagcdn.com/w20/at.png',
+            'France': 'https://flagcdn.com/w20/fr.png',
+            'Romania': 'https://flagcdn.com/w20/ro.png',
+            'Ukraine': 'https://flagcdn.com/w20/ua.png',
+            'Belgium': 'https://flagcdn.com/w20/be.png',
+            'Slovakia': 'https://flagcdn.com/w20/sk.png',
+            'Turkey': 'https://flagcdn.com/w20/tr.png',
+            'Georgia': 'https://flagcdn.com/w20/ge.png',
+            'Portugal': 'https://flagcdn.com/w20/pt.png',
+            'Czechia': 'https://flagcdn.com/w20/cz.png'
+        };
+
+        function populateDropdowns(participants) {
+            const participantSelect = document.getElementById('participantSelect');
+            participants.forEach(participant => {
+                const option = document.createElement('option');
+                option.value = participant.file;
+                option.text = participant.name;
+                participantSelect.add(option);
+            });
+        }
+
+        function loadParticipantPredictions() {
+            const participantSelect = document.getElementById('participantSelect');
+            const selectedfile = participantSelect.value;
+            if (selectedfile) {
+                loadCSV(selectedfile, rows => updateQuarterFinals(rows));
+            } else {
+                clearQuarterFinals();
+            }
+        }
+
+        function loadCSV(file, callback) {
+            fetch(file)
+                .then(response => response.text())
+                .then(data => {
+                    const rows = data.split('\n').map(row => row.split(','));
+                    callback(rows);
+                })
+                .catch(error => console.error('Error loading CSV:', error));
+        }
+
+        function updateQuarterFinals(rows) {
+            document.getElementById('qf1').innerHTML = `<img src="${flags[rows[51][3]]}" class="flag">${rows[51][3]}`;
+            document.getElementById('qf1-2').innerHTML = `<img src="${flags[rows[52][3]]}" class="flag">${rows[52][3]}`;
+            document.getElementById('qf2').innerHTML = `<img src="${flags[rows[53][3]]}" class="flag">${rows[53][3]}`;
+            document.getElementById('qf2-2').innerHTML = `<img src="${flags[rows[58][3]]}" class="flag">${rows[58][3]}`;
+            document.getElementById('qf3').innerHTML = `<img src="${flags[rows[55][3]]}" class="flag">${rows[55][3]}`;
+            document.getElementById('qf3-2').innerHTML = `<img src="${flags[rows[56][3]]}" class="flag">${rows[56][3]}`;
+            document.getElementById('qf4').innerHTML = `<img src="${flags[rows[57][3]]}" class="flag">${rows[57][3]}`;
+            document.getElementById('qf4-2').innerHTML = `<img src="${flags[rows[54][3]]}" class="flag">${rows[54][3]}`;
+
+            for (let i = 1; i <= 4; i++) {
+                let team1 = document.getElementById(`qf${i}`).innerText;
+                let team2 = document.getElementById(`qf${i}-2`).innerText;
+                let dropdown = document.getElementById(`winnerQF${i}`);
+                dropdown.innerHTML = `<option value=""></option><option value="${team1}">${team1}</option><option value="${team2}">${team2}</option>`;
+            }
+        }
+
+        function updateSemiFinals() {
+            const semiFinals = {
+                'sf1': document.getElementById('winnerQF1').value,
+                'sf2': document.getElementById('winnerQF2').value,
+                'sf3': document.getElementById('winnerQF3').value,
+                'sf4': document.getElementById('winnerQF4').value
+            };
+
+            document.getElementById('sf1').innerHTML = `<img src="${flags[semiFinals.sf1]}" class="flag">${semiFinals.sf1}`;
+            document.getElementById('sf1-2').innerHTML = `<img src="${flags[semiFinals.sf4]}" class="flag">${semiFinals.sf4}`;
+            document.getElementById('sf2').innerHTML = `<img src="${flags[semiFinals.sf2]}" class="flag">${semiFinals.sf2}`;
+            document.getElementById('sf2-2').innerHTML = `<img src="${flags[semiFinals.sf3]}" class="flag">${semiFinals.sf3}`;
+
+            for (let i = 1; i <= 2; i++) {
+                let team1 = document.getElementById(`sf${i}`).innerText;
+                let team2 = document.getElementById(`sf${i}-2`).innerText;
+                let dropdown = document.getElementById(`winnerSF${i}`);
+                dropdown.innerHTML = `<option value=""></option><option value="${team1}">${team1}</option><option value="${team2}">${team2}</option>`;
+            }
+        }
+
+        function updateFinal() {
+            const finals = {
+                'final1': document.getElementById('winnerSF1').value,
+                'final2': document.getElementById('winnerSF2').value
+            };
+
+            document.getElementById('final1').innerHTML = `<img src="${flags[finals.final1]}" class="flag">${finals.final1}`;
+            document.getElementById('final2').innerHTML = `<img src="${flags[finals.final2]}" class="flag">${finals.final2}`;
+
+            let team1 = document.getElementById('final1').innerText;
+            let team2 = document.getElementById('final2').innerText;
+            let dropdown = document.getElementById('champion');
+            dropdown.innerHTML = `<option value=""></option><option value="${team1}">${team1}</option><option value="${team2}">${team2}</option>`;
+        }
+
+        function clearQuarterFinals() {
+            for (let i = 1; i <= 4; i++) {
+                document.getElementById(`qf${i}`).innerText = '';
+                document.getElementById(`qf${i}-2`).innerText = '';
+                let dropdown = document.getElementById(`winnerQF${i}`);
+                dropdown.innerHTML = `<option value=""></option>`;
+            }
+            clearSemiFinals();
+        }
+
+        function clearSemiFinals() {
+            for (let i = 1; i <= 2; i++) {
+                document.getElementById(`sf${i}`).innerText = '';
+                document.getElementById(`sf${i}-2`).innerText = '';
+                let dropdown = document.getElementById(`winnerSF${i}`);
+                dropdown.innerHTML = `<option value=""></option>`;
+            }
+            clearFinal();
+        }
+
+        function clearFinal() {
+            document.getElementById('final1').innerText = '';
+            document.getElementById('final2').innerText = '';
+            let dropdown = document.getElementById('champion');
+            dropdown.innerHTML = `<option value=""></option>`;
+        }
+
+        function saveCSV() {
+            const participantName = document.getElementById('participantSelect').selectedOptions[0].text;
+            const qf1 = document.getElementById('qf1').innerText;
+            const qf1_2 = document.getElementById('qf1-2').innerText;
+            const qf2 = document.getElementById('qf2').innerText;
+            const qf2_2 = document.getElementById('qf2-2').innerText;
+            const qf3 = document.getElementById('qf3').innerText;
+            const qf3_2 = document.getElementById('qf3-2').innerText;
+            const qf4 = document.getElementById('qf4').innerText;
+            const qf4_2 = document.getElementById('qf4-2').innerText;
+            const winnerQF1 = document.getElementById('winnerQF1').value;
+            const winnerQF2 = document.getElementById('winnerQF2').value;
+            const winnerQF3 = document.getElementById('winnerQF3').value;
+            const winnerQF4 = document.getElementById('winnerQF4').value;
+            const sf1 = document.getElementById('sf1').innerText;
+            const sf1_2 = document.getElementById('sf1-2').innerText;
+            const sf2 = document.getElementById('sf2').innerText;
+            const sf2_2 = document.getElementById('sf2-2').innerText;
+            const winnerSF1 = document.getElementById('winnerSF1').value;
+            const winnerSF2 = document.getElementById('winnerSF2').value;
+            const final1 = document.getElementById('final1').innerText;
+            const final2 = document.getElementById('final2').innerText;
+            const champion = document.getElementById('champion').value;
+
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "Quarterfinals\n";
+            csvContent += `Date,Team 1,Team 2,Winner\n`;
+            csvContent += `July 5,${qf1},${qf1_2},${winnerQF1}\n`;
+            csvContent += `July 5,${qf2},${qf2_2},${winnerQF2}\n`;
+            csvContent += `July 6,${qf3},${qf3_2},${winnerQF3}\n`;
+            csvContent += `July 6,${qf4},${qf4_2},${winnerQF4}\n`;
+
+            csvContent += "\nSemifinals\n";
+            csvContent += `Date,Team 1,Team 2,Winner\n`;
+            csvContent += `July 9,${sf1},${sf1_2},${winnerSF1}\n`;
+            csvContent += `July 10,${sf2},${sf2_2},${winnerSF2}\n`;
+
+            csvContent += "\nFinal\n";
+            csvContent += `Date,Team 1,Team 2,Champion\n`;
+            csvContent += `July 14,${final1},${final2},${champion}\n`;
+
+            const fileName = `${participantName.replace(/\s+/g, '_')}.csv`;
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", fileName);
+            document.body.appendChild(link); // Required for FF
+
+            link.click();
+        }
+
+        fetch('./jsons/participants.json')
+            .then(response => response.json())
+            .then(data => populateDropdowns(data.participants))
+            .catch(error => console.error('Error loading participants list:', error));
+    </script>
+    <div class="footnote">
+        &copy; 2024. Website created by Nima N.
+    </div>
+</body>
+
+</html>

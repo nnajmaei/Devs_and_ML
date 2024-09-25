@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="./logos/favicon.png">
+    <title>All Predictions</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <style>
+        body {
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            margin: 10px;
+            background-color: #1e1e1e;
+            color: #7c7a7a;
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        button {
+            background-color: rgb(88, 87, 87);
+            color: black;
+            padding: 5px 5px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border: none;
+        }
+
+        .menu-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .menu {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .menu li {
+            display: inline;
+            margin-left: 20px;
+        }
+
+        .menu li a {
+            color: #7c7a7a;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .footnote {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.8em;
+            color: #484747;
+            background-color: 1e1e1e;
+            padding: 5px;
+            border-radius: 3px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="menu-container">
+        <ul class="menu">
+            <li><a href="./ranks.html">Rankings</a></li>
+            <li><a href="./comp2euros.html">Euro2024 Results</a></li>
+            <li><a href="./group_gbyg.html">Group Stages Results</a></li>
+            <li><a href="./KOscores.html">KO Stages Results</a></li>
+            <li><a href="./pvsp.html">Player vs Player</a></li>
+            <li><a href="./all_predictions.html">Download All Predictions</a></li>
+            <li><a href="./predictform.html">Prediction Form</a></li>
+            <li><a href="./rules.html">Points System</a></li>
+            <li><a href="./widget.html">Widget</a></li>
+        </ul>
+    </div>
+    <div class="logo-container">
+        <img src="./logos/logo.png" alt="Euro 2024 Logo" style="width:300px;">
+    </div>
+    <div class="button-container">
+        <button onclick="downloadPDF()">All Predictions</button>
+    </div>
+
+    <script>
+        async function downloadPDF() {
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF();
+
+            // Load the logo image
+            const logoResponse = await fetch('./logos/favicon.png');
+            const logoBlob = await logoResponse.blob();
+            const reader = new FileReader();
+
+            reader.onloadend = async function () {
+                const logoDataUrl = reader.result;
+
+                // Add the logo image to the first page, centered
+                const pageWidth = pdf.internal.pageSize.width;
+                const pageHeight = pdf.internal.pageSize.height;
+                const logoWidth = 50;
+                const logoHeight = 50;
+                const logoX = (pageWidth - logoWidth) / 2;
+                const logoY = (pageHeight - logoHeight) / 2 - 40; // Adjust Y position to leave space for text
+
+                pdf.addImage(logoDataUrl, 'PNG', logoX, logoY, logoWidth, logoHeight);
+
+                pdf.setFontSize(16);
+                pdf.text('All Participants Predictions', pageWidth / 2, logoY + logoHeight + 20, { align: 'center' });
+
+                const response = await fetch('./jsons/participants.json');
+                const participants = await response.json();
+
+                pdf.setFontSize(12);
+                pdf.setFont(undefined, 'bold');
+                pdf.text('Participants', pageWidth / 2, logoY + logoHeight + 35, { align: 'center' });
+                pdf.setFont(undefined, 'normal');
+                pdf.setLineWidth(0.5);
+                pdf.line((pageWidth - 30) / 2, logoY + logoHeight + 38, (pageWidth + 30) / 2, logoY + logoHeight + 38); // Underline
+
+                let y = logoY + logoHeight + 45;
+                const lineSpacing = 5;
+                participants.participants.forEach(participant => {
+                    pdf.text(participant.name, pageWidth / 2, y, { align: 'center' });
+                    y += lineSpacing;
+                });
+
+                // Start a new page for the participant CSV data
+                pdf.addPage();
+
+                const boldText = [
+                    'Group Stage', 'Group A', 'Group B', 'Group C', 'Group D', 'Group E', 'Group F',
+                    'KO Stage', 'Round of 16', 'Quarterfinals', 'Semifinals', 'Final',
+                    'Top Goalscorer', 'Best Goalkeeper', 'Player of Tournament', 'Top Players'
+                ];
+
+                for (let i = 0; i < participants.participants.length; i++) {
+                    const participant = participants.participants[i];
+                    const csvResponse = await fetch(participant.file);
+                    const csvData = await csvResponse.text();
+
+                    if (i > 0) {
+                        pdf.addPage();
+                    }
+
+                    pdf.setFontSize(12);
+                    pdf.text(participant.name, 10, 10);
+                    pdf.setFontSize(8);
+
+                    const rows = csvData.split('\n').map(row => row.split(','));
+                    rows.pop(); // Remove the last row
+                    let y = 15;
+                    const lineHeight = 4;  // Reduce line height further
+                    const margin = 5;
+
+                    rows.forEach(row => {
+                        let line = row.join(', ').trim();
+                        if (line) {  // Skip empty rows
+                            let splitText = pdf.splitTextToSize(line, pageWidth - margin * 2);
+
+                            splitText.forEach(textLine => {
+                                if (y + lineHeight > pageHeight - margin) {
+                                    pdf.addPage();
+                                    y = margin;
+                                }
+                                if (boldText.includes(textLine.trim())) {
+                                    pdf.setFont(undefined, 'bold');
+                                    pdf.text(textLine, margin, y);
+                                    pdf.line(margin, y + 1, margin + pdf.getStringUnitWidth(textLine) * 8, y + 1); // Underline
+                                    pdf.setFont(undefined, 'normal');
+                                } else {
+                                    pdf.text(textLine, margin, y);
+                                }
+                                y += lineHeight;
+                            });
+                        }
+                    });
+                }
+
+                pdf.save('full_predictions.pdf');
+            };
+
+            reader.readAsDataURL(logoBlob);
+        }
+    </script>
+    <div class="footnote">
+        &copy; 2024. Website created by Nima N.
+    </div>
+</body>
+
+</html>

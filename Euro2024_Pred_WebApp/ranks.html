@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="./logos/favicon.png">
+    <title>Rankings</title>
+    <style>
+        body {
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            margin: 10px;
+            background-color: #1e1e1e;
+            color: #7c7a7a;
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .menu-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .menu {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .menu li {
+            display: inline;
+            margin-left: 20px;
+        }
+
+        .menu li a {
+            color: #7c7a7a;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .center {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        select {
+            width: 200px;
+            background-color: #6b6a6a;
+            color: #fff;
+            border: 1px solid #444444;
+        }
+
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+            width: 50%;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #7c7a7a;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        .widget-container {
+            margin-top: 50px;
+            margin: 40px auto;
+            width: 50%;
+        }
+
+        .footnote {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.8em;
+            color: #484747;
+            background-color: #1e1e1e;
+            padding: 5px;
+            border-radius: 3px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="menu-container">
+        <ul class="menu">
+            <li><a href="./ranks.html">Rankings</a></li>
+            <li><a href="./comp2euros.html">Euro2024 Results</a></li>
+            <li><a href="./group_gbyg.html">Group Stages Results</a></li>
+            <li><a href="./KOscores.html">KO Stages Results</a></li>
+            <li><a href="./pvsp.html">Player vs Player</a></li>
+            <li><a href="./all_predictions.html">Download All Predictions</a></li>
+            <li><a href="./predictform.html">Prediction Form</a></li>
+            <li><a href="./rules.html">Points System</a></li>
+            <li><a href="./widget.html">Widget</a></li>
+        </ul>
+    </div>
+    <div class="logo-container">
+        <img src="./logos/logo.png" alt="Euro 2024 Logo" style="width:300px;">
+    </div>
+    <div class="center">
+        <select id="dateSelector" onchange="generateScoresTable()">
+            <option value="Overall">Overall</option>
+        </select>
+    </div>
+    <div id="scoresTableContainer" class="center"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const startDate = new Date('2024-06-15');
+            const endDate = new Date('2024-07-15');
+            const dateSelector = document.getElementById('dateSelector');
+
+            for (let d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
+                const dateOption = document.createElement('option');
+                const dateString = d.toLocaleString('default', { month: 'long', day: 'numeric' });
+                dateOption.value = dateString;
+                dateOption.text = dateString;
+                dateSelector.add(dateOption);
+            }
+
+            generateScoresTable();
+        });
+
+        async function generateScoresTable() {
+            try {
+                const response = await fetch('./jsons/participants.json');
+                const participants = await response.json();
+
+                const selectedDate = document.getElementById('dateSelector').value;
+                let scoresData = [];
+                let description = '';
+
+                for (const participant of participants.participants) {
+                    const csvResponse = await fetch(participant.scores);
+                    const csvData = await csvResponse.text();
+                    const participantRows = csvData.split('\n').map(row => row.split(','));
+
+                    let totalScore = 0;
+                    let dateScore = 0;
+
+                    for (const row of participantRows) {
+                        if (row.length === 6) {
+                            const score = parseInt(row[5]) || 0;
+                            totalScore += score;
+
+                            if (row[0] === selectedDate) {
+                                dateScore += score;
+                            }
+                        }
+                    }
+
+                    if (selectedDate === 'Overall') {
+                        scoresData.push({ name: participant.name, score: totalScore });
+                        description = 'Overall Ranking';
+                    } else {
+                        scoresData.push({ name: participant.name, score: dateScore });
+                        description = `Ranking for Games on ${selectedDate}`;
+                    }
+                }
+
+                scoresData.sort((a, b) => b.score - a.score);
+
+                let tableHTML = `<h2>${description}</h2>`;
+                tableHTML += '<table>';
+                tableHTML += '<tr><th>Rank</th><th>Participant</th><th>Score</th></tr>';
+
+                scoresData.forEach((data, index) => {
+                    tableHTML += `<tr><td>${index + 1}</td><td>${data.name}</td><td>${data.score}</td></tr>`;
+                });
+
+                tableHTML += '</table>';
+
+                document.getElementById('scoresTableContainer').innerHTML = tableHTML;
+            } catch (error) {
+                console.error('Error generating scores table:', error);
+            }
+        }
+    </script>
+    <div class="footnote">
+        &copy; 2024. Website created by Nima N.
+    </div>
+</body>
+
+</html>

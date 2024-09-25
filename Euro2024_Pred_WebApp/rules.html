@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="./logos/favicon.png">
+    <title>Points System</title>
+    <style>
+        body {
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            margin: 10px;
+            background-color: #1e1e1e;
+            color: #7c7a7a;
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .content {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #2c2c2c;
+            padding: 20px;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            text-align: center;
+            color: #fff;
+        }
+
+        ul {
+            color: #fff;
+            list-style: none;
+            padding: 0;
+        }
+
+        ul li {
+            margin-bottom: 10px;
+        }
+
+        .footnote {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.8em;
+            color: #484747;
+            background-color: 1e1e1e;
+            padding: 5px;
+            border-radius: 3px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .menu-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .menu {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .menu li {
+            display: inline;
+            margin-left: 20px;
+        }
+
+        .menu li a {
+            color: #7c7a7a;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="menu-container">
+        <ul class="menu">
+            <li><a href="./ranks.html">Rankings</a></li>
+            <li><a href="./comp2euros.html">Euro2024 Results</a></li>
+            <li><a href="./group_gbyg.html">Group Stages Results</a></li>
+            <li><a href="./KOscores.html">KO Stages Results</a></li>
+            <li><a href="./pvsp.html">Player vs Player</a></li>
+            <li><a href="./all_predictions.html">Download All Predictions</a></li>
+            <li><a href="./predictform.html">Prediction Form</a></li>
+            <li><a href="./rules.html">Points System</a></li>
+            <li><a href="./widget.html">Widget</a></li>
+        </ul>
+    </div>
+    <div class="logo-container">
+        <img src="./logos/logo.png" alt="Euro 2024 Logo" style="width:300px;">
+    </div>
+    <div class="content">
+        <h1>Points System</h1>
+        <h2>Group Stage Predictions:</h2>
+        <ul>
+            <li>10 points: If the exact scoreline is predicted</li>
+            <li>8 points: If the predicted match outcome (only win or loss) and GD match the actual result, even if the
+                exact scores do not match.</li>
+            <li>5 points: If the predicted result is a draw, and the actual result is also a draw, regardless of the
+                exact score.</li>
+            <li>5 points: If the predicted match outcome (win or loss) is correct, but the exact scores or goal
+                difference are incorrect.</li>
+            <li>0 points: If none of the above conditions are met.</li>
+        </ul>
+        <h2>Knockout Stage Predictions:</h2>
+        <ul>
+            <li>20 points: for each correctly predicted qualified team to QF</li>
+            <li>40 points: for each correctly predicted qualified team to SF</li>
+            <li>60 points: for each correctly predicted qualified team to F</li>
+            <li>80 points: for correctly predicted Champions</li>
+        </ul>
+        <h2>Top Players Predictions:</h2>
+        <ul>
+            <li>80 points: for correctly predicting the Top Goal Scorer.</li>
+            <li>80 points: for correctly predicting the Best Player.</li>
+        </ul>
+    </div>
+    <div class="footnote">
+        &copy; 2024. Website created by Nima N.
+    </div>
+</body>
+
+</html>

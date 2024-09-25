@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="./logos/favicon.png">
+    <title>Knockout Stages Results</title>
+    <style>
+        body {
+            font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+            margin: 10px;
+            background-color: #1e1e1e;
+            color: #7c7a7a;
+        }
+
+        .menu-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .menu {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .menu li {
+            display: inline;
+            margin-left: 20px;
+        }
+
+        .menu li a {
+            color: #7c7a7a;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            table-layout: fixed;
+        }
+
+        th,
+        td {
+            border: none;
+            padding: 5px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #333333;
+        }
+
+        td.stage-cell {
+            border-bottom: 2px solid #444444;
+            width: 100%;
+            align-content: top;
+        }
+
+        select {
+            width: 200px;
+            background-color: #6b6a6a;
+            color: #fff;
+            border: 1px solid #444444;
+        }
+
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .bold-text {
+            font-weight: bold;
+        }
+
+        .footnote {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 0.8em;
+            color: #484747;
+            background-color: 1e1e1e;
+            padding: 5px;
+            border-radius: 3px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="menu-container">
+        <ul class="menu">
+            <li><a href="./ranks.html">Rankings</a></li>
+            <li><a href="./comp2euros.html">Euro2024 Results</a></li>
+            <li><a href="./group_gbyg.html">Group Stages Results</a></li>
+            <li><a href="./KOscores.html">KO Stages Results</a></li>
+            <li><a href="./pvsp.html">Player vs Player</a></li>
+            <li><a href="./all_predictions.html">Download All Predictions</a></li>
+            <li><a href="./predictform.html">Prediction Form</a></li>
+            <li><a href="./rules.html">Points System</a></li>
+            <li><a href="./widget.html">Widget</a></li>
+        </ul>
+    </div>
+    <div class="logo-container">
+        <img src="./logos/logo.png" alt="Euro 2024 Logo" style="width:300px;">
+    </div>
+    <h1>Knockout Stages Results</h1>
+
+    <!-- QF Table -->
+    <table class="resultsTable" id="qfTable">
+        <thead>
+            <tr id="participantNamesQF">
+                <th>QF</th>
+                <!-- Participant names will be appended here -->
+            </tr>
+            <tr id="subColumnsQF">
+                <th></th>
+                <!-- Sub-columns (Team, Score) will be appended here -->
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>QT 1</td>
+            </tr>
+            <tr>
+                <td>QT 2</td>
+            </tr>
+            <tr>
+                <td>QT 3</td>
+            </tr>
+            <tr>
+                <td>QT 4</td>
+            </tr>
+            <tr>
+                <td>QT 5</td>
+            </tr>
+            <tr>
+                <td>QT 6</td>
+            </tr>
+            <tr>
+                <td>QT 7</td>
+            </tr>
+            <tr>
+                <td>QT 8</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- SF Table -->
+    <table class="resultsTable" id="sfTable">
+        <thead>
+            <tr id="participantNamesSF">
+                <th>SF</th>
+                <!-- Participant names will be appended here -->
+            </tr>
+            <tr id="subColumnsSF">
+                <th></th>
+                <!-- Sub-columns (Team, Score) will be appended here -->
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>QT 1</td>
+            </tr>
+            <tr>
+                <td>QT 2</td>
+            </tr>
+            <tr>
+                <td>QT 3</td>
+            </tr>
+            <tr>
+                <td>QT 4</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- F Table -->
+    <table class="resultsTable" id="fTable">
+        <thead>
+            <tr id="participantNamesF">
+                <th>F</th>
+                <!-- Participant names will be appended here -->
+            </tr>
+            <tr id="subColumnsF">
+                <th></th>
+                <!-- Sub-columns (Team, Score) will be appended here -->
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>QT 1</td>
+            </tr>
+            <tr>
+                <td>QT 2</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Champion Table -->
+    <table class="resultsTable" id="championTable">
+        <thead>
+            <tr id="participantNamesChampion">
+                <th>Champion</th>
+                <!-- Participant names will be appended here -->
+            </tr>
+            <tr id="subColumnsChampion">
+                <th></th>
+                <!-- Sub-columns (Team, Score) will be appended here -->
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Best Players Table -->
+    <table class="resultsTable" id="bestPlayersTable">
+        <thead>
+            <tr id="participantNamesBestPlayers">
+                <th>Best Players</th>
+                <!-- Participant names will be appended here -->
+            </tr>
+            <tr id="subColumnsBestPlayers">
+                <th></th>
+                <!-- Sub-columns (Team, Score) will be appended here -->
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Golden Boot</td>
+            </tr>
+            <tr>
+                <td>Top Player</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        const countries = {
+            'Germany': 'https://flagcdn.com/w20/de.png',
+            'Scotland': 'https://flagcdn.com/w20/gb-sct.png',
+            'Hungary': 'https://flagcdn.com/w20/hu.png',
+            'Switzerland': 'https://flagcdn.com/w20/ch.png',
+            'Spain': 'https://flagcdn.com/w20/es.png',
+            'Croatia': 'https://flagcdn.com/w20/hr.png',
+            'Italy': 'https://flagcdn.com/w20/it.png',
+            'Albania': 'https://flagcdn.com/w20/al.png',
+            'Serbia': 'https://flagcdn.com/w20/rs.png',
+            'England': 'https://flagcdn.com/w20/gb-eng.png',
+            'Slovenia': 'https://flagcdn.com/w20/si.png',
+            'Denmark': 'https://flagcdn.com/w20/dk.png',
+            'Poland': 'https://flagcdn.com/w20/pl.png',
+            'Netherlands': 'https://flagcdn.com/w20/nl.png',
+            'Austria': 'https://flagcdn.com/w20/at.png',
+            'France': 'https://flagcdn.com/w20/fr.png',
+            'Romania': 'https://flagcdn.com/w20/ro.png',
+            'Ukraine': 'https://flagcdn.com/w20/ua.png',
+            'Belgium': 'https://flagcdn.com/w20/be.png',
+            'Slovakia': 'https://flagcdn.com/w20/sk.png',
+            'Turkey': 'https://flagcdn.com/w20/tr.png',
+            'Georgia': 'https://flagcdn.com/w20/ge.png',
+            'Portugal': 'https://flagcdn.com/w20/pt.png',
+            'Czechia': 'https://flagcdn.com/w20/cz.png'
+        };
+
+        const abbreviations = {
+            'Germany': 'GER',
+            'Scotland': 'SCO',
+            'Hungary': 'HUN',
+            'Switzerland': 'SUI',
+            'Spain': 'ESP',
+            'Croatia': 'CRO',
+            'Italy': 'ITA',
+            'Albania': 'ALB',
+            'Serbia': 'SRB',
+            'England': 'ENG',
+            'Slovenia': 'SVN',
+            'Denmark': 'DEN',
+            'Poland': 'POL',
+            'Netherlands': 'NED',
+            'Austria': 'AUT',
+            'France': 'FRA',
+            'Romania': 'ROU',
+            'Ukraine': 'UKR',
+            'Belgium': 'BEL',
+            'Slovakia': 'SVK',
+            'Turkey': 'TUR',
+            'Georgia': 'GEO',
+            'Portugal': 'POR',
+            'Czechia': 'CZE'
+        };
+
+        document.addEventListener('DOMContentLoaded', async function () {
+            const response = await fetch('./jsons/participants.json');
+            const data = await response.json();
+            const participants = data.participants;
+
+            const tableHeaders = document.querySelectorAll('.resultsTable thead tr:first-child');
+            const subHeaders = document.querySelectorAll('.resultsTable thead tr:last-child');
+            const tables = document.querySelectorAll('.resultsTable tbody');
+
+            participants.forEach(participant => {
+                appendParticipantHeaders(tableHeaders, participant.name);
+                appendSubHeaders(subHeaders);
+            });
+
+            for (let i = 0; i < participants.length; i++) {
+                const participant = participants[i];
+                const csvResponse = await fetch(participant.scores);
+                const csvData = await csvResponse.text();
+                const rows = csvData.split('\n').map(row => row.split(','));
+
+                populateRows(rows, i, tables);
+            }
+
+            function appendParticipantHeaders(headers, name) {
+                headers.forEach(header => {
+                    const th = document.createElement('th');
+                    th.colSpan = 2;
+                    th.textContent = name;
+                    header.appendChild(th);
+                });
+            }
+
+            function appendSubHeaders(headers) {
+                headers.forEach(header => {
+                    const subThTeam = document.createElement('th');
+                    subThTeam.className = 'sub-column';
+                    subThTeam.textContent = 'Team';
+                    header.appendChild(subThTeam);
+
+                    const subThScore = document.createElement('th');
+                    subThScore.className = 'sub-column';
+                    subThScore.textContent = 'Score';
+                    header.appendChild(subThScore);
+                });
+            }
+
+            function populateRows(rows, index, tables) {
+                const getCellData = (row, teamCol, scoreCol) => {
+                    return { team: rows[row][teamCol], score: rows[row][scoreCol] };
+                };
+
+                const qfStartRow = 51;
+                const sfStartRow = 61;
+                const fStartRow = 67;
+                const championRow = 71;
+                const goldenBootRow = 74;
+                const topPlayerRow = 75;
+
+                // Populate QF
+                for (let i = 0; i < 8; i++) {
+                    const data = getCellData(qfStartRow + i, 3, 5);
+                    const row = tables[0].querySelectorAll('tr')[i];
+                    appendCells(row, data);
+                }
+
+                // Populate SF
+                for (let i = 0; i < 4; i++) {
+                    const data = getCellData(sfStartRow + i, 3, 5);
+                    const row = tables[1].querySelectorAll('tr')[i];
+                    appendCells(row, data);
+                }
+
+                // Populate F
+                for (let i = 0; i < 2; i++) {
+                    const data = getCellData(fStartRow + i, 3, 5);
+                    const row = tables[2].querySelectorAll('tr')[i];
+                    appendCells(row, data);
+                }
+
+                // Populate Champion
+                const championData = getCellData(championRow, 3, 5);
+                appendCells(tables[3].querySelectorAll('tr')[0], championData);
+
+                // Populate Best Players
+                const goldenBootData = getCellData(goldenBootRow, 1, 5);
+                appendCells(tables[4].querySelectorAll('tr')[0], goldenBootData);
+
+                const topPlayerData = getCellData(topPlayerRow, 1, 5);
+                appendCells(tables[4].querySelectorAll('tr')[1], topPlayerData);
+            }
+
+            function appendCells(row, data) {
+                const teamCell = document.createElement('td');
+                const teamName = abbreviations[data.team] || data.team;
+                const flagImg = countries[data.team] ? `<img src="${countries[data.team]}" alt="${data.team}" style="width:20px; margin-right:5px;">` : '';
+                teamCell.innerHTML = `${flagImg}${teamName}`;
+                const scoreCell = document.createElement('td');
+                scoreCell.textContent = data.score;
+
+                row.appendChild(teamCell);
+                row.appendChild(scoreCell);
+            }
+        });
+    </script>
+    <div class="footnote">
+        &copy; 2024. Website created by Nima N.
+    </div>
+</body>
+
+</html>
