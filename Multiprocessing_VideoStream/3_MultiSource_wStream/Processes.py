@@ -2,9 +2,7 @@ import cv2
 import multiprocessing
 import numpy as np
 import time
-import os
 
-from Broadcaster import VideoBroadcaster, ProcessBroadcaster
 class ConsumerProcess(multiprocessing.Process):
 
     def __init__(self, task_function, client_index, index, broadcaster):

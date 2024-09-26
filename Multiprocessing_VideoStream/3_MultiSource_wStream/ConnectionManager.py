@@ -3,8 +3,7 @@ import os
 import cv2
 
 from Broadcaster import VideoBroadcaster, ProcessBroadcaster
-from Processes import (Client, ConsumerProcess, VideoDisplayProcess, FaceDetectionProcess,
-                       TextDetectionProcess, DownsampleProcess)
+from Processes import Client
 class ConnectionManager:
     """
     A class responsible for managing video broadcasts and consumer processes.

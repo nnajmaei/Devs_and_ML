@@ -1,11 +1,9 @@
 import cv2
 import multiprocessing
-import numpy as np
-import time
 import os
 
 from Broadcaster import VideoBroadcaster
-from Processes import ConsumerProcess, VideoDisplayProcess, FaceDetectionProcess
+from Processes import VideoDisplayProcess, FaceDetectionProcess
 from Processes import TextDetectionProcess, DownsampleProcess
 
 class MultiProcessor:

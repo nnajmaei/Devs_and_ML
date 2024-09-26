@@ -98,7 +98,7 @@ echo "--------------------------------------------------------------------------
 if [[ " ${tasks_to_run[*]} " =~ " 1 " ]]; then
     echo -e "${DARK_BLUE}1- Removing unused imports using Autoflake...${NC}"
     echo -e "${GRAY}Inclusions: ArcPyUtils, notebooks, notebooks-updated, daemons${NC}"
-    autoflake --remove-all-unused-imports --ignore-pass-after-docstring --recursive --in-place ./ArcPyUtils ./notebooks  ./notebooks-updated  ./daemons
+    autoflake --remove-all-unused-imports --ignore-pass-after-docstring --recursive --in-place ./
     echo " "
     autoflake_changed_files_count=$(git diff --name-only | wc -l)
 
