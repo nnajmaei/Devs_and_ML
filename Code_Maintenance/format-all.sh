@@ -44,6 +44,7 @@ normalize_task_input() {
 
 # Validate user input: 'y', 'n', or comma/space-separated numbers
 while true; do
+    echo " "
     echo "Do you want to perform all tasks, select specific tasks, or provide task numbers directly?"
     read -p "Enter 'y' to perform all tasks, 'n' to choose specific tasks, or task numbers (e.g., 1 4 3 or 1,4,3): " user_input
 
