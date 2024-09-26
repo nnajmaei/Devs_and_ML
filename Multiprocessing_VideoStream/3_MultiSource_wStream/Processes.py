@@ -3,6 +3,7 @@ import multiprocessing
 import numpy as np
 import time
 
+
 class ConsumerProcess(multiprocessing.Process):
 
     def __init__(self, task_function, client_index, index, broadcaster):
@@ -55,9 +56,7 @@ class ConsumerProcess(multiprocessing.Process):
         Args:
             process_name (str): The name of the process associated with the window.
         """
-        self.window_name = (
-            f"Consumer {self.client_index + 1} - Process {self.index + 1} - {process_name}"
-        )
+        self.window_name = f"Consumer {self.client_index + 1} - Process {self.index + 1} - {process_name}"
 
     def display_frame(self, frame):
         """
@@ -76,7 +75,7 @@ class ConsumerProcess(multiprocessing.Process):
             cv2.FONT_HERSHEY_DUPLEX,
             0.5,
             (255, 255, 255),
-            1
+            1,
         )
         cv2.putText(
             frame,
@@ -85,12 +84,12 @@ class ConsumerProcess(multiprocessing.Process):
             cv2.FONT_HERSHEY_DUPLEX,
             0.5,
             (255, 255, 255),
-            1
+            1,
         )
         cv2.imshow(self.window_name, frame)
         cv2.namedWindow(self.window_name, cv2.WINDOW_NORMAL)
         key = cv2.waitKey(1)
-        if key == ord('q'):
+        if key == ord("q"):
             self.frame_queue.put(None)
             self.output_frame_queue.put(None)
 
@@ -120,6 +119,7 @@ class VideoDisplayProcess(ConsumerProcess):
         """
         super().__init__(self.display_frame, client_index, index, broadcaster)
         self.set_window_name("Video Display")
+
 
 class FaceDetectionProcess(ConsumerProcess):
     """
@@ -158,7 +158,9 @@ class FaceDetectionProcess(ConsumerProcess):
         """
         Loads the face detection model.
         """
-        model_path = "/Users/niman/PycharmProjects/pythonProject/DNN_models/deploy.prototxt"
+        model_path = (
+            "/Users/niman/PycharmProjects/pythonProject/DNN_models/deploy.prototxt"
+        )
         weights_path = "/Users/niman/PycharmProjects/pythonProject/DNN_models/res10_300x300_ssd_iter_140000.caffemodel"
         try:
             self.net = cv2.dnn.readNetFromCaffe(model_path, weights_path)
@@ -172,17 +174,19 @@ class FaceDetectionProcess(ConsumerProcess):
         Args:
             frame: The video frame to perform face detection on.
         """
-        if not hasattr(self, 'net'):
+        if not hasattr(self, "net"):
             self.load_face_detection_model()
         blob = cv2.dnn.blobFromImage(
-            cv2.resize(frame, (300, 300)), 1.0, (300, 300), (104.0, 177.0, 123.0))
+            cv2.resize(frame, (300, 300)), 1.0, (300, 300), (104.0, 177.0, 123.0)
+        )
         self.net.setInput(blob)
         detections = self.net.forward()
         for i in range(detections.shape[2]):
             confidence = detections[0, 0, i, 2]
             if confidence > self.confidence_threshold:
                 box = detections[0, 0, i, 3:7] * np.array(
-                    [frame.shape[1], frame.shape[0], frame.shape[1], frame.shape[0]])
+                    [frame.shape[1], frame.shape[0], frame.shape[1], frame.shape[0]]
+                )
                 (startX, startY, endX, endY) = box.astype(int)
                 cv2.rectangle(frame, (startX, startY), (endX, endY), (0, 255, 0), 2)
         self.display_frame(frame)
@@ -234,7 +238,7 @@ class TextDetectionProcess(ConsumerProcess):
             print(f"Error loading the text detection model: {e}")
 
     def detect_texts(self, frame):
-        if not hasattr(self, 'net'):
+        if not hasattr(self, "net"):
             self.load_text_detection_model()
         if self.broadcaster.video_source != 0:
             confidence_threshold = 0.3
@@ -244,9 +248,17 @@ class TextDetectionProcess(ConsumerProcess):
             max_rows = 0.4
         small_frame = cv2.resize(frame, (320, 320))
         blob = cv2.dnn.blobFromImage(
-            small_frame, 1.0, (320, 320), (123.68, 116.78, 103.94), swapRB=True, crop=False)
+            small_frame,
+            1.0,
+            (320, 320),
+            (123.68, 116.78, 103.94),
+            swapRB=True,
+            crop=False,
+        )
         self.net.setInput(blob)
-        (scores, geometry) = self.net.forward(["feature_fusion/Conv_7/Sigmoid", "feature_fusion/concat_3"])
+        (scores, geometry) = self.net.forward(
+            ["feature_fusion/Conv_7/Sigmoid", "feature_fusion/concat_3"]
+        )
         (numRows, numCols) = scores.shape[2:4]
         rects = []
         confidences = []
@@ -277,7 +289,7 @@ class TextDetectionProcess(ConsumerProcess):
                 rects.append((startX, startY, endX, endY))
                 confidences.append(scoresData[x])
         boxes = self.non_max_suppression(np.array(rects), probs=confidences)
-        for (startX, startY, endX, endY) in boxes:
+        for startX, startY, endX, endY in boxes:
             cv2.rectangle(frame, (startX, startY), (endX, endY), (0, 255, 0), 2)
         self.display_frame(frame)
 
@@ -318,7 +330,9 @@ class TextDetectionProcess(ConsumerProcess):
             w = np.maximum(0, xx2 - xx1 + 1)
             h = np.maximum(0, yy2 - yy1 + 1)
             overlap = (w * h) / area[idxs[:last]]
-            idxs = np.delete(idxs, np.concatenate(([last], np.where(overlap > overlapThresh)[0])))
+            idxs = np.delete(
+                idxs, np.concatenate(([last], np.where(overlap > overlapThresh)[0]))
+            )
         return boxes[pick].astype("int")
 
 
@@ -360,8 +374,11 @@ class DownsampleProcess(ConsumerProcess):
         Args:
             frame: The video frame to be downsampled and displayed.
         """
-        frame = cv2.resize(frame, None, fx=self.downscale_factor, fy=self.downscale_factor)
+        frame = cv2.resize(
+            frame, None, fx=self.downscale_factor, fy=self.downscale_factor
+        )
         self.display_frame(frame)
+
 
 class Client:
     """
@@ -380,6 +397,7 @@ class Client:
             Initializes a consumer process instance.
 
     """
+
     def __init__(self, client_index, sources):
         """
         Initializes a Client instance with the given parameters.
@@ -401,8 +419,11 @@ class Client:
             try:
                 print("\n----------")
                 print(f"----- Consumer {self.client_index + 1}:")
-                count = int(input(
-                    f"Enter the number of processes you want to add to consumer {self.client_index + 1}: "))
+                count = int(
+                    input(
+                        f"Enter the number of processes you want to add to consumer {self.client_index + 1}: "
+                    )
+                )
                 if count >= 1:
                     break
                 else:
@@ -414,32 +435,37 @@ class Client:
             print(f"\n--- Consumer {self.client_index + 1} - Process {i + 1}:")
             while True:
                 choice = input(
-                    "Select process type: 1. Video Display, 2. Face Detection, 3. Text Detection, 4. Downsampler: ")
+                    "Select process type: 1. Video Display, 2. Face Detection, 3. Text Detection, 4. Downsampler: "
+                )
                 print(
-                    f"Select Broadcast for Consumer {self.client_index + 1} - Process {i + 1}:")
+                    f"Select Broadcast for Consumer {self.client_index + 1} - Process {i + 1}:"
+                )
                 for idx, source in enumerate(self.sources):
                     print(f"{idx + 1}. {source.name}")
 
                 try:
-                    channel_index = int(
-                        input(f"Enter the broadcast for this process {i + 1}: ")) - 1
+                    channel_index = (
+                        int(input(f"Enter the broadcast for this process {i + 1}: "))
+                        - 1
+                    )
                     if channel_index < 0 or channel_index >= len(self.sources):
                         raise ValueError
                 except ValueError:
                     print(
-                        "Invalid channel choice. Please select from the provided options.")
+                        "Invalid channel choice. Please select from the provided options."
+                    )
                     continue
 
-                if choice == '1':
+                if choice == "1":
                     self.process_registry[VideoDisplayProcess] = channel_index
                     break
-                elif choice == '2':
+                elif choice == "2":
                     self.process_registry[FaceDetectionProcess] = channel_index
                     break
-                elif choice == '3':
+                elif choice == "3":
                     self.process_registry[TextDetectionProcess] = channel_index
                     break
-                elif choice == '4':
+                elif choice == "4":
                     self.process_registry[DownsampleProcess] = channel_index
                     break
                 else:
@@ -447,7 +473,8 @@ class Client:
 
         for i, (consumer_class, channel) in enumerate(self.process_registry.items()):
             self.consumer_processes.append(
-                self.initialize_process(consumer_class, i, self.sources[channel]))
+                self.initialize_process(consumer_class, i, self.sources[channel])
+            )
 
     def initialize_process(self, consumer_class, index, broadcaster):
         """
@@ -463,5 +490,3 @@ class Client:
         """
         consumer = consumer_class(self.client_index, index, broadcaster)
         return consumer
-
-

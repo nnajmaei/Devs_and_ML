@@ -4,6 +4,7 @@ import os
 from Broadcaster import VideoBroadcaster
 from Processors import Client
 
+
 class ConnectionManager:
     """
     A class responsible for managing video broadcasts and consumer processes.
@@ -47,16 +48,17 @@ class ConnectionManager:
         for si in range(source_number):
             while True:
                 choice = input(
-                    f"\n--- Broadcast {si+1}: Select video source for broadcast: 1. Webcam, 2. Local saved video file: ")
-                if choice == '1':
+                    f"\n--- Broadcast {si+1}: Select video source for broadcast: 1. Webcam, 2. Local saved video file: "
+                )
+                if choice == "1":
                     webcam_choice = input("Enter 0. for Webcam, 2. iPhone: ")
                     video_source = int(webcam_choice)
-                    name = "Webcam "+webcam_choice
+                    name = "Webcam " + webcam_choice
                     self.sources.append(VideoBroadcaster(video_source, name, si))
                     break
-                elif choice == '2':
+                elif choice == "2":
                     video_file = input("Enter the file name you want to use: ")
-                    video_file = "/Users/niman/Desktop/"+video_file
+                    video_file = "/Users/niman/Desktop/" + video_file
                     if os.path.isfile(video_file):
                         video_source = video_file
                         name = "File_" + os.path.basename(video_source)
@@ -64,7 +66,8 @@ class ConnectionManager:
                         break
                     else:
                         print(
-                            f"File '{video_file}' does not exist. Please provide a valid file path.")
+                            f"File '{video_file}' does not exist. Please provide a valid file path."
+                        )
                 else:
                     print("Invalid choice. Please enter 1 or 2.")
         print("\n----- Result -----")
@@ -78,8 +81,7 @@ class ConnectionManager:
         """
         while True:
             print("\n--------------------\nCONSUMERS SETUP:")
-            client_number = int(
-                input("How many consumers do you want to have? "))
+            client_number = int(input("How many consumers do you want to have? "))
             if client_number > 0:
                 break
             else:
@@ -92,11 +94,13 @@ class ConnectionManager:
         print("Consumers created:")
         for client in self.clients:
             print(
-                f"Consumer {client.client_index + 1} has {len(client.consumer_processes)} processes:")
+                f"Consumer {client.client_index + 1} has {len(client.consumer_processes)} processes:"
+            )
             for process in client.consumer_processes:
                 source_index = client.process_registry[process.__class__]
                 print(
-                    f"    - {process.window_name.split(' - ')[-1]} connected to source {source_index + 1} {process.broadcaster.name}")
+                    f"    - {process.window_name.split(' - ')[-1]} connected to source {source_index + 1} {process.broadcaster.name}"
+                )
         print("------------------")
 
     def run(self):
@@ -108,8 +112,7 @@ class ConnectionManager:
 
         print("--- Broadcast Started")
         for i, source in enumerate(self.sources):
-            self.broadcasters_queue.append(
-                multiprocessing.Process(target=source.start))
+            self.broadcasters_queue.append(multiprocessing.Process(target=source.start))
             self.broadcasters_queue[i].start()
 
         print("--- Processes Started")

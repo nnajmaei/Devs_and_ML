@@ -6,6 +6,7 @@ from Broadcaster import VideoBroadcaster
 from Processes import VideoDisplayProcess, FaceDetectionProcess
 from Processes import TextDetectionProcess, DownsampleProcess
 
+
 class MultiProcessor:
     """
     A class responsible for managing video broadcasts and consumer processes.
@@ -43,17 +44,19 @@ class MultiProcessor:
         while True:
             print("Select video source: 1. Webcam, 2. Local saved video file (MLB.mp4)")
             choice = input("Enter 1 or 2: ")
-            if choice == '1':
+            if choice == "1":
                 webcam_choice = input("Enter 0. for Webcam, 2. iPhone: ")
                 self.video_source = int(webcam_choice)
                 break
-            elif choice == '2':
+            elif choice == "2":
                 video_file = "/Users/niman/Desktop/MLB.mp4"
                 if os.path.isfile(video_file):
                     self.video_source = video_file
                     break
                 else:
-                    print(f"File '{video_file}' does not exist. Please provide a valid file path.")
+                    print(
+                        f"File '{video_file}' does not exist. Please provide a valid file path."
+                    )
             else:
                 print("Invalid choice. Please enter 1 or 2.")
 
@@ -73,19 +76,21 @@ class MultiProcessor:
         print("\n")
         for i in range(count):
             print(f"==========\nConsumer {i + 1}:")
-            print("Select process type: 1. Video Display, 2. Face Detection, 3. Text Detection, 4. Downsampler")
+            print(
+                "Select process type: 1. Video Display, 2. Face Detection, 3. Text Detection, 4. Downsampler"
+            )
             while True:
                 choice = input(f"Enter 1, 2, 3, or 4 for Consumer {i + 1}: ")
-                if choice == '1':
+                if choice == "1":
                     self.consumer_processes.append(VideoDisplayProcess)
                     break
-                elif choice == '2':
+                elif choice == "2":
                     self.consumer_processes.append(FaceDetectionProcess)
                     break
-                elif choice == '3':
+                elif choice == "3":
                     self.consumer_processes.append(TextDetectionProcess)
                     break
-                elif choice == '4':
+                elif choice == "4":
                     self.consumer_processes.append(DownsampleProcess)
                     break
                 else:
@@ -116,7 +121,9 @@ class MultiProcessor:
             self.select_video_source()
             self.select_consumer_processes()
             self.video_broadcaster = VideoBroadcaster(self.video_source)
-            broadcaster_process = multiprocessing.Process(target=self.video_broadcaster.start)
+            broadcaster_process = multiprocessing.Process(
+                target=self.video_broadcaster.start
+            )
             broadcaster_process.start()
             consumer_processes = [
                 self.initialize_consumer(consumer_class, i + 1, self.video_broadcaster)

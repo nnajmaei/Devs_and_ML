@@ -2,6 +2,7 @@ import cv2
 import multiprocessing
 import time
 
+
 class VideoBroadcaster:
     """
     A class for broadcasting video frames from a source using multiple processes.
@@ -38,9 +39,9 @@ class VideoBroadcaster:
         self.stop_flag = multiprocessing.Event()
         self.consumers_finished_flag = multiprocessing.Event()
         self.capture = None
-        self.frame_rate = multiprocessing.Value('d', 0.0)
-        self.start_time = multiprocessing.Value('d', 0.0)
-        self.frame_count = multiprocessing.Value('i', 0)
+        self.frame_rate = multiprocessing.Value("d", 0.0)
+        self.start_time = multiprocessing.Value("d", 0.0)
+        self.frame_count = multiprocessing.Value("i", 0)
 
     def start(self):
         """

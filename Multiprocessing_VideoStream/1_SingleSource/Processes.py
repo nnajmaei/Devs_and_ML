@@ -4,6 +4,7 @@ import numpy as np
 import time
 import os
 
+
 class ConsumerProcess(multiprocessing.Process):
     """
     A base class for consumer processes that process frames from a queue.
@@ -66,15 +67,30 @@ class ConsumerProcess(multiprocessing.Process):
             frame (numpy.ndarray): The frame to be displayed.
         """
         frame = cv2.resize(frame, (640, 480))
-        cv2.putText(frame, f"Broadcast Frame Rate: {self.get_broadcaster_frame_rate():6.2f} fps", (10, 30),
-                    cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255), 1)
-        cv2.putText(frame, f"Process Frame Rate:   {self.frame_rate:6.2f} fps", (10, 60),
-                    cv2.FONT_HERSHEY_DUPLEX, 0.5, (255, 255, 255), 1)
+        cv2.putText(
+            frame,
+            f"Broadcast Frame Rate: {self.get_broadcaster_frame_rate():6.2f} fps",
+            (10, 30),
+            cv2.FONT_HERSHEY_DUPLEX,
+            0.5,
+            (255, 255, 255),
+            1,
+        )
+        cv2.putText(
+            frame,
+            f"Process Frame Rate:   {self.frame_rate:6.2f} fps",
+            (10, 60),
+            cv2.FONT_HERSHEY_DUPLEX,
+            0.5,
+            (255, 255, 255),
+            1,
+        )
         cv2.imshow(self.window_name, frame)
         cv2.namedWindow(self.window_name, cv2.WINDOW_NORMAL)
         key = cv2.waitKey(1)
-        if key == ord('q'):
+        if key == ord("q"):
             self.frame_queue.put(None)
+
 
 class VideoDisplayProcess(ConsumerProcess):
     """
@@ -88,6 +104,7 @@ class VideoDisplayProcess(ConsumerProcess):
     def __init__(self, index, broadcaster):
         super().__init__(self.display_frame, index, broadcaster)
         self.set_window_name("Video Display")
+
 
 class FaceDetectionProcess(ConsumerProcess):
     """
@@ -107,8 +124,10 @@ class FaceDetectionProcess(ConsumerProcess):
 
     def load_face_detection_model(self):
         """Load the face detection model."""
-        model_path = os.getcwd()+"/DNN_models/deploy.prototxt"
-        weights_path = os.getcwd()+"/DNN_models/res10_300x300_ssd_iter_140000.caffemodel"
+        model_path = os.getcwd() + "/DNN_models/deploy.prototxt"
+        weights_path = (
+            os.getcwd() + "/DNN_models/res10_300x300_ssd_iter_140000.caffemodel"
+        )
         try:
             self.net = cv2.dnn.readNetFromCaffe(model_path, weights_path)
         except cv2.error as e:
@@ -116,20 +135,23 @@ class FaceDetectionProcess(ConsumerProcess):
 
     def detect_faces(self, frame):
         """Detect faces in a video frame and display them."""
-        if not hasattr(self, 'net'):
+        if not hasattr(self, "net"):
             self.load_face_detection_model()
         blob = cv2.dnn.blobFromImage(
-            cv2.resize(frame, (300, 300)), 1.0, (300, 300), (104.0, 177.0, 123.0))
+            cv2.resize(frame, (300, 300)), 1.0, (300, 300), (104.0, 177.0, 123.0)
+        )
         self.net.setInput(blob)
         detections = self.net.forward()
         for i in range(detections.shape[2]):
             confidence = detections[0, 0, i, 2]
             if confidence > self.confidence_threshold:
                 box = detections[0, 0, i, 3:7] * np.array(
-                    [frame.shape[1], frame.shape[0], frame.shape[1], frame.shape[0]])
+                    [frame.shape[1], frame.shape[0], frame.shape[1], frame.shape[0]]
+                )
                 (startX, startY, endX, endY) = box.astype(int)
                 cv2.rectangle(frame, (startX, startY), (endX, endY), (0, 255, 0), 2)
         self.display_frame(frame)
+
 
 class TextDetectionProcess(ConsumerProcess):
     """
@@ -147,7 +169,7 @@ class TextDetectionProcess(ConsumerProcess):
 
     def load_text_detection_model(self):
         """Load the text detection model."""
-        model_path = os.getcwd()+"/DNN_models/frozen_east_text_detection.pb"
+        model_path = os.getcwd() + "/DNN_models/frozen_east_text_detection.pb"
         try:
             self.net = cv2.dnn.readNet(model_path)
         except cv2.error as e:
@@ -155,7 +177,7 @@ class TextDetectionProcess(ConsumerProcess):
 
     def detect_texts(self, frame):
         """Detect text in a video frame and display it."""
-        if not hasattr(self, 'net'):
+        if not hasattr(self, "net"):
             self.load_text_detection_model()
         if self.broadcaster.video_source != 0:
             confidence_threshold = 0.3
@@ -165,9 +187,17 @@ class TextDetectionProcess(ConsumerProcess):
             max_rows = 0.4
         small_frame = cv2.resize(frame, (320, 320))
         blob = cv2.dnn.blobFromImage(
-            small_frame, 1.0, (320, 320), (123.68, 116.78, 103.94), swapRB=True, crop=False)
+            small_frame,
+            1.0,
+            (320, 320),
+            (123.68, 116.78, 103.94),
+            swapRB=True,
+            crop=False,
+        )
         self.net.setInput(blob)
-        (scores, geometry) = self.net.forward(["feature_fusion/Conv_7/Sigmoid", "feature_fusion/concat_3"])
+        (scores, geometry) = self.net.forward(
+            ["feature_fusion/Conv_7/Sigmoid", "feature_fusion/concat_3"]
+        )
         (numRows, numCols) = scores.shape[2:4]
         rects = []
         confidences = []
@@ -198,7 +228,7 @@ class TextDetectionProcess(ConsumerProcess):
                 rects.append((startX, startY, endX, endY))
                 confidences.append(scoresData[x])
         boxes = self.non_max_suppression(np.array(rects), probs=confidences)
-        for (startX, startY, endX, endY) in boxes:
+        for startX, startY, endX, endY in boxes:
             cv2.rectangle(frame, (startX, startY), (endX, endY), (0, 255, 0), 2)
         self.display_frame(frame)
 
@@ -239,8 +269,11 @@ class TextDetectionProcess(ConsumerProcess):
             w = np.maximum(0, xx2 - xx1 + 1)
             h = np.maximum(0, yy2 - yy1 + 1)
             overlap = (w * h) / area[idxs[:last]]
-            idxs = np.delete(idxs, np.concatenate(([last], np.where(overlap > overlapThresh)[0])))
+            idxs = np.delete(
+                idxs, np.concatenate(([last], np.where(overlap > overlapThresh)[0]))
+            )
         return boxes[pick].astype("int")
+
 
 class DownsampleProcess(ConsumerProcess):
     """
@@ -259,5 +292,7 @@ class DownsampleProcess(ConsumerProcess):
 
     def downsample_frame(self, frame):
         """Downscale a video frame and display it."""
-        frame = cv2.resize(frame, None, fx=self.downscale_factor, fy=self.downscale_factor)
+        frame = cv2.resize(
+            frame, None, fx=self.downscale_factor, fy=self.downscale_factor
+        )
         self.display_frame(frame)
