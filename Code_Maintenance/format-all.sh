@@ -142,16 +142,31 @@ if [[ " ${tasks_to_run[*]} " =~ " 5 " ]]; then
     # Check for missing imports in the project (inlined check_imports_in_project.py)
     echo -e "${DARK_BLUE}5- Reporting missing imports in the project...${NC}"
     files_with_issues_count=$(python /Users/niman/Devs_and_ML/Code_Maintenance/check_missing_imports.py "$project_directory")
-    echo "$files_with_issues_count"
 
-    before_last_entry=$(echo "$files_with_issues_count" | awk 'NR==1,/Number of files with import issues:/')
-    last_entry=$(echo "$files_with_issues_count" | awk '/Number of files with import issues:/,EOF' | tail -n 1)
+    # Extract the last line as last_entry
+    last_entry=$(echo "$files_with_issues_count" | tail -n 1)
+    
+    # Extract everything before the last line as before_last_entry
+    before_last_entry=$(echo "$files_with_issues_count" | sed '$d')
 
     # Optionally trim whitespace if necessary
     before_last_entry=$(echo "$before_last_entry" | sed 's/[[:space:]]*$//')
     last_entry=$(echo "$last_entry" | sed 's/^[[:space:]]*//')
+
+    # Convert last_entry to an integer
+    last_entry_int=$(echo "$last_entry" | tr -d '[:space:]')  # Remove any surrounding whitespace
+
+    # Color-code before_last_entry based on last_entry's value
+    if (( last_entry_int != 0 )); then
+        echo -e "${RED}${before_last_entry}${NC}"
+        echo -e "${RED}Number of files with import issues: $last_entry_int${NC}"
+    else
+        echo -e "${GREEN}${before_last_entry}${NC}"
+    fi
+
     echo "--------------------------------------------------------------------------------"
 fi
+
 
 git reset
 echo -e "${BLUE}=== SUMMARY ===${NC}"
@@ -168,9 +183,6 @@ if [ "$changed_files_count" -ne 0 ]; then
 else
     echo -e "${GREEN}No Files Changed${NC}"
 fi
-
-# Convert last_entry to an integer
-last_entry_int=$(echo "$last_entry" | tr -d '[:space:]')  # Remove any surrounding whitespace
 
 # Check if last_entry is non-zero
 if (( last_entry_int != 0 )); then
