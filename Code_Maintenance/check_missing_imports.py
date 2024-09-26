@@ -1,4 +1,5 @@
 import os
+import sys
 import ast
 import importlib.util
 
@@ -83,7 +84,11 @@ def check_project_imports(project_dir):
 
 
 if __name__ == "__main__":
-    project_directory = os.path.dirname(os.path.abspath(__file__))
+    if len(sys.argv) > 1:
+        project_directory = sys.argv[1]
+    else:
+        project_directory = os.path.dirname(os.path.abspath(__file__))
+
     missing_imports, files_with_issues_count = check_project_imports(project_directory)
 
     if missing_imports:

@@ -19,6 +19,7 @@ if [ "$user_response" != "y" ]; then
     # Ask for the new directory path
     read -p "Please enter the path to the new directory: " new_directory
     if [ -d "$new_directory" ]; then
+        project_directory="$new_directory"
         cd "$new_directory" || exit
     else
         echo -e "${RED}Directory does not exist. Exiting.${NC}"
@@ -26,6 +27,7 @@ if [ "$user_response" != "y" ]; then
     fi
 else
     # Navigate to the default directory
+    project_directory="$DEFAULT_DIR"
     cd "$DEFAULT_DIR" || exit
 fi
 
@@ -139,7 +141,7 @@ fi
 if [[ " ${tasks_to_run[*]} " =~ " 5 " ]]; then
     # Check for missing imports in the project (inlined check_imports_in_project.py)
     echo -e "${DARK_BLUE}5- Reporting missing imports in the project...${NC}"
-    files_with_issues_count=$(python /Users/niman/Devs_and_ML/Code_Maintenance/check_missing_imports.py)
+    files_with_issues_count=$(python /Users/niman/Devs_and_ML/Code_Maintenance/check_missing_imports.py "$project_directory")
     echo "$files_with_issues_count"
 
     before_last_entry=$(echo "$files_with_issues_count" | awk 'NR==1,/Number of files with import issues:/')
@@ -148,8 +150,6 @@ if [[ " ${tasks_to_run[*]} " =~ " 5 " ]]; then
     # Optionally trim whitespace if necessary
     before_last_entry=$(echo "$before_last_entry" | sed 's/[[:space:]]*$//')
     last_entry=$(echo "$last_entry" | sed 's/^[[:space:]]*//')
-
-    echo "$before_last_entry"
     echo "--------------------------------------------------------------------------------"
 fi
 
