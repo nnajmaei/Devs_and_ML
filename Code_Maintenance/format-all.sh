@@ -8,36 +8,8 @@ DARK_BLUE='\033[1;34m'
 GRAY='\033[2;37m'  # Dim white
 NC='\033[0m' # No Color
 
-#!/bin/bash
-
-# Colors for output
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-BLUE='\033[0;34m'
-DARK_BLUE='\033[1;34m'
-GRAY='\033[2;37m'  # Dim white
-NC='\033[0m' # No Color
-
-# Default directory
-DEFAULT_DIR="/Users/niman/Desktop/Pad/Work/Trajekt/ArcMachine/"
-
-# Ask the user if the default directory is correct
-echo "The default directory is: ${GRAY}$DEFAULT_DIR${NC}"
-read -p "Is this the directory you want to use? (y/n): " user_response
-
-if [ "$user_response" != "y" ]; then
-    # Ask for the new directory path
-    read -p "Please enter the path to the new directory: " new_directory
-    if [ -d "$new_directory" ]; then
-        cd "$new_directory" || exit
-    else
-        echo -e "${RED}Directory does not exist. Exiting.${NC}"
-        exit 1
-    fi
-else
-    # Navigate to the default directory
-    cd "$DEFAULT_DIR" || exit
-fi
+# Navigate to the specified directory
+cd "/Users/niman/Desktop/Pad/Work/Trajekt/ArcMachine/" || exit
 
 git add .
 echo "--------------------------------------------------------------------------------"
@@ -256,31 +228,54 @@ if __name__ == "__main__":
             else:
                 print(f"{'':<{max_file_path_length + 6}}   Missing Module: {module}")
 
+        # Color-coded output based on the number of files with issues
         if files_with_issues_count > 0:
             print(f"\n${RED}Number of files with import issues: {files_with_issues_count}${NC}")
     else:
         print(f"\n${GREEN}All imports seem valid${NC}")
     
+    # Print the file_with_issues_count to be captured by the bash script
     print(files_with_issues_count)
 EOF
-    last_entry=$(echo "$files_with_issues_count" | awk '/Number of files with import issues:/,EOF' | tail -n 1 | sed 's/^[[:space:]]*//')
-    if (( last_entry != 0 )); then
-        echo -e "${RED}Files With Import Issues: $last_entry${NC}"
-    else
-        echo -e "${GREEN}No Files with Import Issues${NC}"
-    fi
-    echo "--------------------------------------------------------------------------------"
-fi
+)
 
+
+# Assuming `files_with_issues_count` contains the whole output
+
+before_last_entry=$(echo "$files_with_issues_count" | awk 'NR==1,/Number of files with import issues:/')
+last_entry=$(echo "$files_with_issues_count" | awk '/Number of files with import issues:/,EOF' | tail -n 1)
+
+# Optionally trim whitespace if necessary
+before_last_entry=$(echo "$before_last_entry" | sed 's/[[:space:]]*$//')
+last_entry=$(echo "$last_entry" | sed 's/^[[:space:]]*//')
+
+echo "$before_last_entry"
+
+
+echo "--------------------------------------------------------------------------------"
 git reset
 echo -e "${BLUE}=== SUMMARY ===${NC}"
 
+# Save the count of changed files in a variable
 changed_files_count=$(git diff --name-only | wc -l)
 
+# Use an if statement to check if the count is non-zero
 if [ "$changed_files_count" -ne 0 ]; then
     echo -e "${RED}Number of changed files: $changed_files_count${NC}"
-    echo -e "${GRAY}Files Changed:${NC}"
+    echo -e "${GRAY}Files Changed :${NC}"
     git status
+    echo " "
 else
     echo -e "${GREEN}No Files Changed${NC}"
+
+fi
+
+# Convert last_entry to an integer
+last_entry_int=$(echo "$last_entry" | tr -d '[:space:]')  # Remove any surrounding whitespace
+
+# Check if last_entry is non-zero
+if (( last_entry_int != 0 )); then
+    echo -e "${RED}Files With Import Issues: $last_entry_int${NC}"
+else
+    echo -e "${GREEN}No Files with Import Issues${NC}"
 fi
