@@ -12,7 +12,7 @@ NC='\033[0m' # No Color
 DEFAULT_DIR="/Users/niman/Desktop/Pad/Work/Trajekt/ArcMachine/"
 
 # Ask the user if the default directory is correct
-echo "The default directory is: ${GRAY}$DEFAULT_DIR${NC}"
+echo -e "The default directory is: ${BLUE}$DEFAULT_DIR${NC}"
 read -p "Is this the directory you want to use? (y/n): " user_response
 
 if [ "$user_response" != "y" ]; then
@@ -31,22 +31,59 @@ else
     cd "$DEFAULT_DIR" || exit
 fi
 
-# Ask the user if they want to perform all tasks or specific ones
-echo "Do you want to perform all tasks?"
-read -p "Enter 'y' to perform all tasks or 'n' to choose specific tasks: " all_tasks
+# Function to check if input is a valid list of numbers
+is_valid_task_numbers() {
+    echo "$1" | grep -Eq '^([0-9]+[ ,]*)+$'
+}
+
+# Function to normalize input (removes spaces and commas)
+normalize_task_input() {
+    # Replace any commas or spaces with a single comma, then trim commas
+    echo "$1" | sed 's/[ ,]\+/,/g' | sed 's/^,\|,$//g'
+}
+
+# Validate user input: 'y', 'n', or comma/space-separated numbers
+while true; do
+    echo "Do you want to perform all tasks, select specific tasks, or provide task numbers directly?"
+    read -p "Enter 'y' to perform all tasks, 'n' to choose specific tasks, or task numbers (e.g., 1 4 3 or 1,4,3): " user_input
+
+    if [[ "$user_input" == "y" || "$user_input" == "n" ]]; then
+        break
+    elif is_valid_task_numbers "$user_input"; then
+        user_input=$(normalize_task_input "$user_input")
+        break
+    else
+        echo -e "${RED}Invalid input. Please enter 'y', 'n', or a comma/space-separated list of task numbers.${NC}"
+    fi
+done
 
 tasks_to_run=(1 2 3 4 5)
 
-if [ "$all_tasks" != "y" ]; then
+if [[ "$user_input" == "y" ]]; then
+    # Perform all tasks
+    echo "Performing all tasks..."
+elif [[ "$user_input" == "n" ]]; then
+    # Show the list of tasks and prompt for selection
     echo "Available tasks:"
     echo "1- Removing unused imports using Autoflake"
     echo "2- Formatting code using Black"
     echo "3- Formatting JSONs using Prettier"
     echo "4- Clearing Jupyter notebook outputs"
     echo "5- Reporting missing imports in the project"
-    read -p "Enter the numbers associated with the tasks you want to perform (e.g., 1, 4, 3): " selected_tasks
-    IFS=', ' read -r -a tasks_to_run <<< "$selected_tasks"
+    read -p "Enter the numbers associated with the tasks you want to perform (e.g., 1 4 3 or 1,4,3): " selected_tasks
+    if is_valid_task_numbers "$selected_tasks"; then
+        selected_tasks=$(normalize_task_input "$selected_tasks")
+        IFS=',' read -r -a tasks_to_run <<< "$selected_tasks"
+    else
+        echo -e "${RED}Invalid task numbers. Exiting.${NC}"
+        exit 1
+    fi
+else
+    # Assume user entered task numbers directly
+    IFS=',' read -r -a tasks_to_run <<< "$user_input"
+    echo "Performing selected tasks: ${tasks_to_run[*]}"
 fi
+
 
 git add .
 echo "--------------------------------------------------------------------------------"
