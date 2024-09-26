@@ -85,7 +85,6 @@ else
     echo "Performing selected tasks: ${tasks_to_run[*]}"
 fi
 
-
 git add .
 echo "--------------------------------------------------------------------------------"
 echo -e "${BLUE}Starting format-all.sh script...${NC}"
@@ -94,12 +93,11 @@ echo "--------------------------------------------------------------------------
 # Check if task 1 is selected
 if [[ " ${tasks_to_run[*]} " =~ " 1 " ]]; then
     echo -e "${DARK_BLUE}1- Removing unused imports using Autoflake...${NC}"
+    echo -e "${GRAY}Inclusions: ArcPyUtils, notebooks, notebooks-updated, daemons${NC}"
     autoflake --remove-all-unused-imports --ignore-pass-after-docstring --recursive --in-place ./ArcPyUtils ./notebooks  ./notebooks-updated  ./daemons
     echo " "
-    # Save the count of changed files in a variable
     autoflake_changed_files_count=$(git diff --name-only | wc -l)
 
-    # Use an if statement to check if the count is non-zero
     if [ "$autoflake_changed_files_count" -ne 0 ]; then
         echo -e "${RED}Number of changed files: $autoflake_changed_files_count${NC}"
         echo -e "${GRAY}Files Changed so far:${NC}"
@@ -113,15 +111,12 @@ fi
 
 # Check if task 2 is selected
 if [[ " ${tasks_to_run[*]} " =~ " 2 " ]]; then
-    # Black: format code
     echo -e "${DARK_BLUE}2- Formatting code using Black...${NC}"
+    echo -e "${GRAY}Exclusions: None${NC}"
     black ./
     echo " "
-
-    # Save the count of changed files in a variable
     changed_files_count=$(git diff --name-only | wc -l)
 
-    # Use an if statement to check if the count is non-zero
     if [ "$changed_files_count" -ne 0 ]; then
         echo -e "${RED}Number of changed files: $changed_files_count${NC}"
         echo -e "${GRAY}Files Changed :${NC}"
@@ -135,14 +130,12 @@ fi
 
 # Check if task 3 is selected
 if [[ " ${tasks_to_run[*]} " =~ " 3 " ]]; then
-    # Prettier: format code
     echo -e "${DARK_BLUE}3- Formatting JSONs using Prettier...${NC}"
+    echo -e "${GRAY}Inclusions: All JSON files${NC}"
     npx prettier --write ./
     echo " "
-    # Save the count of changed files in a variable
     changed_files_count=$(git diff --name-only | wc -l)
 
-    # Use an if statement to check if the count is non-zero
     if [ "$changed_files_count" -ne 0 ]; then
         echo -e "${RED}Number of changed files: $changed_files_count${NC}"
         echo -e "${GRAY}Files Changed :${NC}"
@@ -156,14 +149,12 @@ fi
 
 # Check if task 4 is selected
 if [[ " ${tasks_to_run[*]} " =~ " 4 " ]]; then
-    # Clear Jupyter notebook outputs
     echo -e "${DARK_BLUE}4- Clearing Jupyter notebook outputs...${NC}"
+    echo -e "${GRAY}Inclusions: All Jupyter notebooks in notebooks, notebooks-updated${NC}"
     python /Users/niman/Devs_and_ML/Code_Maintenance/clear_notebook_outputs.py
     echo " "
-    # Save the count of changed files in a variable
     changed_files_count=$(git diff --name-only | wc -l)
 
-    # Use an if statement to check if the count is non-zero
     if [ "$changed_files_count" -ne 0 ]; then
         echo -e "${RED}Number of changed files: $changed_files_count${NC}"
         echo -e "${GRAY}Files Changed :${NC}"
@@ -177,24 +168,17 @@ fi
 
 # Check if task 5 is selected
 if [[ " ${tasks_to_run[*]} " =~ " 5 " ]]; then
-    # Check for missing imports in the project (inlined check_imports_in_project.py)
     echo -e "${DARK_BLUE}5- Reporting missing imports in the project...${NC}"
+    echo -e "${GRAY}Exclusions: EXCLUDED_DIRS (/arc, /arc_testing, /archive, /core_utils)${NC}"
+    echo -e "${GRAY}Exclusions: EXCLUDED_FILES (TrajektBallDetection/trajektballdetection/circle_detection/new_hough_circle_detector.py, daemons/alpha_controller/tests/test_mock_alpha.py, daemons/pos_controller/MachineMotion_v4_6.py, daemons/wheel_speed_controller/controllers/gmc.py)${NC}"
     files_with_issues_count=$(python /Users/niman/Devs_and_ML/Code_Maintenance/check_missing_imports.py "$project_directory")
 
-    # Extract the last line as last_entry
     last_entry=$(echo "$files_with_issues_count" | tail -n 1)
-    
-    # Extract everything before the last line as before_last_entry
     before_last_entry=$(echo "$files_with_issues_count" | sed '$d')
-
-    # Optionally trim whitespace if necessary
     before_last_entry=$(echo "$before_last_entry" | sed 's/[[:space:]]*$//')
     last_entry=$(echo "$last_entry" | sed 's/^[[:space:]]*//')
+    last_entry_int=$(echo "$last_entry" | tr -d '[:space:]')
 
-    # Convert last_entry to an integer
-    last_entry_int=$(echo "$last_entry" | tr -d '[:space:]')  # Remove any surrounding whitespace
-
-    # Color-code before_last_entry based on last_entry's value
     if (( last_entry_int != 0 )); then
         echo -e "${RED}${before_last_entry}${NC}"
         echo -e "${RED}Number of files with import issues: $last_entry_int${NC}"
@@ -205,14 +189,11 @@ if [[ " ${tasks_to_run[*]} " =~ " 5 " ]]; then
     echo "--------------------------------------------------------------------------------"
 fi
 
-
 git reset
 echo -e "${BLUE}=== SUMMARY ===${NC}"
 
-# Save the count of changed files in a variable
 changed_files_count=$(git diff --name-only | wc -l)
 
-# Use an if statement to check if the count is non-zero
 if [ "$changed_files_count" -ne 0 ]; then
     echo -e "${RED}Number of changed files: $changed_files_count${NC}"
     echo -e "${GRAY}Files Changed :${NC}"
@@ -222,7 +203,6 @@ else
     echo -e "${GREEN}No Files Changed${NC}"
 fi
 
-# Check if last_entry is non-zero
 if (( last_entry_int != 0 )); then
     echo -e "${RED}Files With Import Issues: $last_entry_int${NC}"
 else
