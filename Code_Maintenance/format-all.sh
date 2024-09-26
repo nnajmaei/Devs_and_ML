@@ -10,6 +10,9 @@ NC='\033[0m' # No Color
 
 # Default directory
 DEFAULT_DIR="/Users/niman/Desktop/Pad/Work/Trajekt/ArcMachine/"
+echo "--------------------------------------------------------------------------------"
+echo -e "${BLUE}Starting format-all.sh script...${NC}"
+echo " "
 
 # Ask the user if the default directory is correct
 echo -e "The default directory is: ${BLUE}$DEFAULT_DIR${NC}"
@@ -62,6 +65,7 @@ tasks_to_run=(1 2 3 4 5)
 
 if [[ "$user_input" == "y" ]]; then
     # Perform all tasks
+    echo " "
     echo "Performing all tasks..."
 elif [[ "$user_input" == "n" ]]; then
     # Show the list of tasks and prompt for selection
@@ -82,12 +86,12 @@ elif [[ "$user_input" == "n" ]]; then
 else
     # Assume user entered task numbers directly
     IFS=',' read -r -a tasks_to_run <<< "$user_input"
+    echo " "
     echo "Performing selected tasks: ${tasks_to_run[*]}"
 fi
 
+echo " "
 git add .
-echo "--------------------------------------------------------------------------------"
-echo -e "${BLUE}Starting format-all.sh script...${NC}"
 echo "--------------------------------------------------------------------------------"
 
 # Check if task 1 is selected
