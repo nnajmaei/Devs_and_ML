@@ -8,8 +8,36 @@ DARK_BLUE='\033[1;34m'
 GRAY='\033[2;37m'  # Dim white
 NC='\033[0m' # No Color
 
-# Navigate to the specified directory
-cd "/Users/niman/Desktop/Pad/Work/Trajekt/ArcMachine/" || exit
+#!/bin/bash
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+DARK_BLUE='\033[1;34m'
+GRAY='\033[2;37m'  # Dim white
+NC='\033[0m' # No Color
+
+# Default directory
+DEFAULT_DIR="/Users/niman/Desktop/Pad/Work/Trajekt/ArcMachine/"
+
+# Ask the user if the default directory is correct
+echo "The default directory is: ${GRAY}$DEFAULT_DIR${NC}"
+read -p "Is this the directory you want to use? (y/n): " user_response
+
+if [ "$user_response" != "y" ]; then
+    # Ask for the new directory path
+    read -p "Please enter the path to the new directory: " new_directory
+    if [ -d "$new_directory" ]; then
+        cd "$new_directory" || exit
+    else
+        echo -e "${RED}Directory does not exist. Exiting.${NC}"
+        exit 1
+    fi
+else
+    # Navigate to the default directory
+    cd "$DEFAULT_DIR" || exit
+fi
 
 git add .
 echo "--------------------------------------------------------------------------------"
