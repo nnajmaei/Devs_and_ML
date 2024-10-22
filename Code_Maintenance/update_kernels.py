@@ -29,7 +29,7 @@ def update_kernel(file_path):
     relative_file_path = os.path.relpath(file_path, project_directory)
 
     # Define column widths
-    file_column_width = 60
+    file_column_width = 100
     original_kernel_column_width = 25
 
     # Check if the kernel is already 'arc'
