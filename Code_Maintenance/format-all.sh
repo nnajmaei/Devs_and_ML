@@ -74,8 +74,8 @@ elif [[ "$user_input" == "n" ]]; then
     echo "2- Formatting code using Black"
     echo "3- Formatting JSONs using Prettier"
     echo "4- Clearing Jupyter notebook outputs"
-    echo "5- Reporting missing imports in the project"
-    echo "6- Updating Jupyter notebook kernels"
+    echo "5- Updating Jupyter notebook kernels"
+    echo "6- Reporting missing imports in the project"
     read -p "Enter the numbers associated with the tasks you want to perform (e.g., 1 4 3 or 1,4,3): " selected_tasks
     if is_valid_task_numbers "$selected_tasks"; then
         selected_tasks=$(normalize_task_input "$selected_tasks")
@@ -171,9 +171,30 @@ if [[ " ${tasks_to_run[*]} " =~ " 4 " ]]; then
     echo "--------------------------------------------------------------------------------"
 fi
 
-# Check if task 5 is selected
+# Check if task 5 is selected (now updating Jupyter notebook kernels)
 if [[ " ${tasks_to_run[*]} " =~ " 5 " ]]; then
-    echo -e "${DARK_BLUE}5- Reporting missing imports in the project...${NC}"
+    echo -e "${DARK_BLUE}5- Updating Jupyter notebook kernels...${NC}"
+
+    # Call the external Python script to update kernels
+    python3 /path/to/update_kernels.py "$project_directory"
+
+    echo " "
+    changed_files_count=$(git diff --name-only | wc -l)
+
+    if [ "$changed_files_count" -ne 0 ]; then
+        echo -e "${RED}Number of changed files: $changed_files_count${NC}"
+        echo -e "${GRAY}Files Changed :${NC}"
+        git diff --name-only
+        git add .
+    else
+        echo -e "${GREEN}No Files Changed${NC}"
+    fi
+    echo "--------------------------------------------------------------------------------"
+fi
+
+# Check if task 6 is selected (now reporting missing imports)
+if [[ " ${tasks_to_run[*]} " =~ " 6 " ]]; then
+    echo -e "${DARK_BLUE}6- Reporting missing imports in the project...${NC}"
     echo -e "${GRAY}Exclusions: EXCLUDED_DIRS (/arc, /arc_testing, /archive, /core_utils)${NC}"
     echo -e "${GRAY}Exclusions: EXCLUDED_FILES (TrajektBallDetection/trajektballdetection/circle_detection/new_hough_circle_detector.py, daemons/alpha_controller/tests/test_mock_alpha.py, daemons/pos_controller/MachineMotion_v4_6.py, daemons/wheel_speed_controller/controllers/gmc.py)${NC}"
     files_with_issues_count=$(python /Users/niman/Devs_and_ML/Code_Maintenance/check_missing_imports.py "$project_directory")
@@ -191,27 +212,6 @@ if [[ " ${tasks_to_run[*]} " =~ " 5 " ]]; then
         echo -e "${GREEN}${before_last_entry}${NC}"
     fi
 
-    echo "--------------------------------------------------------------------------------"
-fi
-
-# Check if task 6 is selected (new task: updating Jupyter notebook kernels)
-if [[ " ${tasks_to_run[*]} " =~ " 6 " ]]; then
-    echo -e "${DARK_BLUE}6- Updating Jupyter notebook kernels...${NC}"
-
-    # Call the external Python script to update kernels
-    python3 /path/to/update_kernels.py "$project_directory"
-
-    echo " "
-    changed_files_count=$(git diff --name-only | wc -l)
-
-    if [ "$changed_files_count" -ne 0 ]; then
-        echo -e "${RED}Number of changed files: $changed_files_count${NC}"
-        echo -e "${GRAY}Files Changed :${NC}"
-        git diff --name-only
-        git add .
-    else
-        echo -e "${GREEN}No Files Changed${NC}"
-    fi
     echo "--------------------------------------------------------------------------------"
 fi
 
