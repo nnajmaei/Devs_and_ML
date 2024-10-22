@@ -176,7 +176,7 @@ if [[ " ${tasks_to_run[*]} " =~ " 5 " ]]; then
     echo -e "${DARK_BLUE}5- Updating Jupyter notebook kernels...${NC}"
 
     # Call the external Python script to update kernels
-    python3 /path/to/update_kernels.py "$project_directory"
+    python3 update_kernels.py "$project_directory"
 
     echo " "
     changed_files_count=$(git diff --name-only | wc -l)

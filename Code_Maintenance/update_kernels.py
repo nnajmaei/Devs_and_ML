@@ -56,8 +56,11 @@ def update_kernel(file_path):
     )
 
 
-# Walk through the project directory and find all .ipynb files
+# Walk through the project directory and find all .ipynb files, excluding 'archive/'
 for root, dirs, files in os.walk(project_directory):
+    # Exclude the 'archive/' folder
+    dirs[:] = [d for d in dirs if d != "archive"]
+
     for file in files:
         if file.endswith(".ipynb"):
             file_path = os.path.join(root, file)
