@@ -61,7 +61,7 @@ while true; do
     fi
 done
 
-tasks_to_run=(1 2 3 4 5)
+tasks_to_run=(1 2 3 4 5 6)
 
 if [[ "$user_input" == "y" ]]; then
     # Perform all tasks
@@ -75,6 +75,7 @@ elif [[ "$user_input" == "n" ]]; then
     echo "3- Formatting JSONs using Prettier"
     echo "4- Clearing Jupyter notebook outputs"
     echo "5- Reporting missing imports in the project"
+    echo "6- Updating Jupyter notebook kernels"
     read -p "Enter the numbers associated with the tasks you want to perform (e.g., 1 4 3 or 1,4,3): " selected_tasks
     if is_valid_task_numbers "$selected_tasks"; then
         selected_tasks=$(normalize_task_input "$selected_tasks")
@@ -190,6 +191,27 @@ if [[ " ${tasks_to_run[*]} " =~ " 5 " ]]; then
         echo -e "${GREEN}${before_last_entry}${NC}"
     fi
 
+    echo "--------------------------------------------------------------------------------"
+fi
+
+# Check if task 6 is selected (new task: updating Jupyter notebook kernels)
+if [[ " ${tasks_to_run[*]} " =~ " 6 " ]]; then
+    echo -e "${DARK_BLUE}6- Updating Jupyter notebook kernels...${NC}"
+
+    # Call the external Python script to update kernels
+    python3 /path/to/update_kernels.py "$project_directory"
+
+    echo " "
+    changed_files_count=$(git diff --name-only | wc -l)
+
+    if [ "$changed_files_count" -ne 0 ]; then
+        echo -e "${RED}Number of changed files: $changed_files_count${NC}"
+        echo -e "${GRAY}Files Changed :${NC}"
+        git diff --name-only
+        git add .
+    else
+        echo -e "${GREEN}No Files Changed${NC}"
+    fi
     echo "--------------------------------------------------------------------------------"
 fi
 
