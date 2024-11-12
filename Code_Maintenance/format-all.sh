@@ -61,7 +61,7 @@ while true; do
     fi
 done
 
-tasks_to_run=(1 2 3 4 5 6)
+tasks_to_run=(1 2 3 4 5 6 7)
 
 if [[ "$user_input" == "y" ]]; then
     # Perform all tasks
@@ -76,6 +76,7 @@ elif [[ "$user_input" == "n" ]]; then
     echo "4- Clearing Jupyter notebook outputs"
     echo "5- Updating Jupyter notebook kernels"
     echo "6- Reporting missing imports in the project"
+    echo "7- Running Error ID Checker"
     read -p "Enter the numbers associated with the tasks you want to perform (e.g., 1 4 3 or 1,4,3): " selected_tasks
     if is_valid_task_numbers "$selected_tasks"; then
         selected_tasks=$(normalize_task_input "$selected_tasks")
@@ -211,7 +212,13 @@ if [[ " ${tasks_to_run[*]} " =~ " 6 " ]]; then
     else
         echo -e "${GREEN}${before_last_entry}${NC}"
     fi
+    echo "--------------------------------------------------------------------------------"
+fi
 
+# Check if task 7 is selected (Running Error ID Checker)
+if [[ " ${tasks_to_run[*]} " =~ " 7 " ]]; then
+    echo -e "${DARK_BLUE}7- Running Error ID Checker...${NC}"
+    python3 /Users/niman/Devs_and_ML/Code_Maintenance/error_id_checker.py
     echo "--------------------------------------------------------------------------------"
 fi
 
