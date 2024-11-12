@@ -105,11 +105,6 @@ unique_dict, partial_matches = find_unique_and_partial_matches(
     error_ids, error_values_list, "csv_list", "error_list"
 )
 
-# Print results
-print("All Error IDs from JSON:", error_ids)
-print("Error IDs with whitespace:", ids_with_whitespace)
-print("Error IDs from ErrorID classes:", error_values_list)
-
 # Print unique items
 if unique_dict:
     max_error_id_length = max(len(error_id) for error_id in unique_dict.keys())
