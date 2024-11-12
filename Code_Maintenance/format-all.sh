@@ -61,7 +61,7 @@ while true; do
     fi
 done
 
-tasks_to_run=(1 2 3 4 5 6 7)
+tasks_to_run=(1 2 3 4 5 6 7 8)
 
 if [[ "$user_input" == "y" ]]; then
     # Perform all tasks
@@ -77,6 +77,7 @@ elif [[ "$user_input" == "n" ]]; then
     echo "5- Updating Jupyter notebook kernels"
     echo "6- Reporting missing imports in the project"
     echo "7- Running Error ID Checker"
+    echo "8- Checking for 'daemons' imports in ArcPyUtils"
     read -p "Enter the numbers associated with the tasks you want to perform (e.g., 1 4 3 or 1,4,3): " selected_tasks
     if is_valid_task_numbers "$selected_tasks"; then
         selected_tasks=$(normalize_task_input "$selected_tasks")
@@ -219,6 +220,12 @@ fi
 if [[ " ${tasks_to_run[*]} " =~ " 7 " ]]; then
     echo -e "${DARK_BLUE}7- Running Error ID Checker...${NC}"
     python3 /Users/niman/Devs_and_ML/Code_Maintenance/error_id_checker.py
+    echo "--------------------------------------------------------------------------------"
+fi
+
+if [[ " ${tasks_to_run[*]} " =~ " 8 " ]]; then
+    echo -e "${DARK_BLUE}8- Checking for 'daemons' imports in ArcPyUtils...${NC}"
+    python3 /Users/niman/Devs_and_ML/Code_Maintenance/check_daemon_imports.py
     echo "--------------------------------------------------------------------------------"
 fi
 
