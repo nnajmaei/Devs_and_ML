@@ -75,9 +75,9 @@ elif [[ "$user_input" == "n" ]]; then
     echo "3- Formatting JSONs using Prettier"
     echo "4- Clearing Jupyter notebook outputs"
     echo "5- Updating Jupyter notebook kernels"
-    echo "6- Reporting missing imports in the project"
-    echo "7- Running Error ID Checker"
-    echo "8- Checking for 'daemons' imports in ArcPyUtils"
+    echo "6- Running Error ID Checker"
+    echo "7- Checking for 'daemons' imports in ArcPyUtils"
+    echo "8- Reporting missing imports in the project"
     read -p "Enter the numbers associated with the tasks you want to perform (e.g., 1 4 3 or 1,4,3): " selected_tasks
     if is_valid_task_numbers "$selected_tasks"; then
         selected_tasks=$(normalize_task_input "$selected_tasks")
@@ -194,9 +194,23 @@ if [[ " ${tasks_to_run[*]} " =~ " 5 " ]]; then
     echo "--------------------------------------------------------------------------------"
 fi
 
-# Check if task 6 is selected (now reporting missing imports)
+# Check if task 6 is selected (Running Error ID Checker)
 if [[ " ${tasks_to_run[*]} " =~ " 6 " ]]; then
-    echo -e "${DARK_BLUE}6- Reporting missing imports in the project...${NC}"
+    echo -e "${DARK_BLUE}6- Running Error ID Checker...${NC}"
+    python3 /Users/niman/Devs_and_ML/Code_Maintenance/error_id_checker.py
+    echo "--------------------------------------------------------------------------------"
+fi
+
+# Check if task 7 is selected (Checking for 'daemons' imports in ArcPyUtils)
+if [[ " ${tasks_to_run[*]} " =~ " 7 " ]]; then
+    echo -e "${DARK_BLUE}7- Checking for 'daemons' imports in ArcPyUtils...${NC}"
+    python3 /Users/niman/Devs_and_ML/Code_Maintenance/check_daemon_imports.py
+    echo "--------------------------------------------------------------------------------"
+fi
+
+# Check if task 8 is selected (now reporting missing imports)
+if [[ " ${tasks_to_run[*]} " =~ " 8 " ]]; then
+    echo -e "${DARK_BLUE}8- Reporting missing imports in the project...${NC}"
     echo -e "${GRAY}Exclusions: EXCLUDED_DIRS (/arc, /arc_testing, /archive, /core_utils)${NC}"
     echo -e "${GRAY}Exclusions: EXCLUDED_FILES (TrajektBallDetection/trajektballdetection/circle_detection/new_hough_circle_detector.py, daemons/alpha_controller/tests/test_mock_alpha.py, daemons/pos_controller/MachineMotion_v4_6.py, daemons/wheel_speed_controller/controllers/gmc.py)${NC}"
     files_with_issues_count=$(python /Users/niman/Devs_and_ML/Code_Maintenance/check_missing_imports.py "$project_directory")
@@ -213,19 +227,6 @@ if [[ " ${tasks_to_run[*]} " =~ " 6 " ]]; then
     else
         echo -e "${GREEN}${before_last_entry}${NC}"
     fi
-    echo "--------------------------------------------------------------------------------"
-fi
-
-# Check if task 7 is selected (Running Error ID Checker)
-if [[ " ${tasks_to_run[*]} " =~ " 7 " ]]; then
-    echo -e "${DARK_BLUE}7- Running Error ID Checker...${NC}"
-    python3 /Users/niman/Devs_and_ML/Code_Maintenance/error_id_checker.py
-    echo "--------------------------------------------------------------------------------"
-fi
-
-if [[ " ${tasks_to_run[*]} " =~ " 8 " ]]; then
-    echo -e "${DARK_BLUE}8- Checking for 'daemons' imports in ArcPyUtils...${NC}"
-    python3 /Users/niman/Devs_and_ML/Code_Maintenance/check_daemon_imports.py
     echo "--------------------------------------------------------------------------------"
 fi
 
