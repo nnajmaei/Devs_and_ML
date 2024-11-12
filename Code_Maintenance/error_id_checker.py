@@ -8,7 +8,7 @@ sys.path.insert(
 )
 
 # Import required classes
-from errorID import (
+from errorID import (  # type: ignore
     ProcessErrorPrefix,
     AxisErrorPrefix,
     SensorErrorPrefix,
