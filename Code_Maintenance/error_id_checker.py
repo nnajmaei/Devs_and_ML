@@ -100,6 +100,19 @@ file_path = (
 error_ids, ids_with_whitespace = extract_error_ids(file_path)
 error_values_list = get_error_values()
 
+suffixed_items = [
+    "axis-error-stuck-axis-w1",
+    "axis-error-stuck-axis-w2",
+    "axis-error-stuck-axis-w3",
+    "axis-error-stuck-axis-x1",
+    "axis-error-stuck-axis-z",
+    "misc-error-failed-to-load-video",
+    "process-error-failed-to-setup-ethernet-relay",
+]
+
+for item in suffixed_items:
+    error_values_list.append(item)
+
 # Find unique and partial matches between error_ids (from JSON) and error_values_list (from ErrorID classes)
 unique_dict, partial_matches = find_unique_and_partial_matches(
     error_ids, error_values_list, "csv_list", "error_list"
