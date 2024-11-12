@@ -197,6 +197,8 @@ fi
 # Check if task 6 is selected (Running Error ID Checker)
 if [[ " ${tasks_to_run[*]} " =~ " 6 " ]]; then
     echo -e "${DARK_BLUE}6- Running Error ID Checker...${NC}"
+    /Users/niman/Desktop/Pad/Work/Trajekt/ArcMachine/errorIDs_list/update_csv_from_google.sh
+    /Users/niman/Desktop/Pad/Work/Trajekt/ArcMachine/errorIDs_list/update_json_file_from_csv.sh
     python3 /Users/niman/Devs_and_ML/Code_Maintenance/error_id_checker.py
     echo "--------------------------------------------------------------------------------"
 fi
