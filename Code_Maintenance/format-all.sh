@@ -139,7 +139,7 @@ fi
 if [[ " ${tasks_to_run[*]} " =~ " 3 " ]]; then
     echo -e "${DARK_BLUE}3- Formatting JSONs using Prettier...${NC}"
     echo -e "${GRAY}Inclusions: All JSON files${NC}"
-    npx prettier --write ./
+    npx prettier --write "**/*.json"
     echo " "
     changed_files_count=$(git diff --name-only | wc -l)
 
