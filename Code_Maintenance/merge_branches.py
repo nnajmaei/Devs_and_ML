@@ -1,5 +1,6 @@
 import os
 import subprocess
+import sys
 
 # ANSI color codes
 RESET = "\033[0m"
@@ -48,6 +49,24 @@ def check_if_merge_needed(branch, merge_from, repo_path):
         return False
 
     return bool(stdout.strip())  # If there are logs, a merge is needed
+
+
+def handle_merge_error():
+    """Handle a merge error by prompting the user for action."""
+    while True:
+        response = input(
+            YELLOW + "Merge error occurred. Do you want to:\n"
+            "1. Continue to the next branch\n"
+            "2. Cancel the whole process and exit\n"
+            "Enter 1 or 2: " + RESET
+        ).strip()
+        if response == "1":
+            return True  # Continue to the next branch
+        elif response == "2":
+            print(RED + "Exiting the process." + RESET)
+            sys.exit(1)
+        else:
+            print(RED + "Invalid input. Please enter 1 or 2." + RESET)
 
 
 def main():
@@ -111,17 +130,15 @@ def main():
 
         # Merge
         print(CYAN + f"Merging from {merge_from} into {branch}..." + RESET)
-        _, stderr, returncode = run_git_command(["git", "merge", merge_from], repo_path)
+        stdout, stderr, returncode = run_git_command(
+            ["git", "merge", merge_from], repo_path
+        )
         if returncode != 0:
             print(RED + f"Merge conflict or error: {stderr}" + RESET)
-            if not get_user_confirmation(
-                "Do you want to resolve the conflicts? (yes/y or no/n): "
-            ):
-                print(YELLOW + "Aborting merge..." + RESET)
-                run_git_command(["git", "merge", "--abort"], repo_path)
+            if not handle_merge_error():
                 continue
-            print(CYAN + "Resolve the conflicts and press Enter when done." + RESET)
-            input()
+        else:
+            print(GREEN + f"Merge successful for branch {branch}." + RESET)
 
         # Commit the merge
         commit_message = f"merged in {merge_from}"
@@ -131,15 +148,14 @@ def main():
         if returncode != 0:
             if "nothing to commit" in stderr.lower():
                 print(GREEN + f"No changes to commit for branch {branch}." + RESET)
-            else:
-                print(RED + f"Error committing merge: {stderr}" + RESET)
-            continue
 
         # Push the changes
         print(CYAN + f"Pushing branch {branch}..." + RESET)
         _, stderr, returncode = run_git_command(["git", "push"], repo_path)
         if returncode != 0:
             print(RED + f"Error pushing branch {branch}: {stderr}" + RESET)
+            if not handle_merge_error():
+                continue
 
 
 if __name__ == "__main__":
