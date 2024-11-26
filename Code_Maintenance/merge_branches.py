@@ -28,10 +28,8 @@ def get_user_confirmation(prompt):
         response = input(CYAN + prompt + RESET).strip().lower()
         if response in {"yes", "y"}:
             return True
-        elif response in {"no", "n"}:
-            return False
         else:
-            print(RED + "Invalid input. Please enter 'yes', 'y', 'no', or 'n'." + RESET)
+            return False
 
 
 def check_if_merge_needed(branch, merge_from, repo_path):
@@ -82,13 +80,13 @@ def main():
     branches = [line.strip("* ").strip() for line in stdout.splitlines()]
 
     for branch in branches:
+        if branch.startswith("deploy"):
+            # print(CYAN + f"\nSkipping deploy branch" + RESET)
+            continue
+
         print("\n" + "=" * 50)  # Separation line
         print(BOLD + f"Branch: {branch}" + RESET)
         print("=" * 50)
-
-        if branch.startswith("deploy"):
-            print(CYAN + f"Skipping deploy branch: {branch}" + RESET)
-            continue
 
         # Determine the correct branch to merge from
         if branch.startswith("dev/"):
@@ -100,36 +98,30 @@ def main():
         elif branch.startswith("main/"):
             merge_from = "origin/deploy/main"
         else:
-            print(
-                RED
-                + f"Warning: Unsupported branch pattern for {branch}. Skipping..."
-                + RESET
-            )
+            print(RED + f"Unsupported branch pattern.\nSkipping..." + RESET)
             continue
 
         # Check if a merge is needed
-        print(CYAN + f"Checking if merge is needed for {branch}..." + RESET)
+        print(CYAN + f"Checking if merge is needed..." + RESET)
         if not check_if_merge_needed(branch, merge_from, repo_path):
-            print(
-                GREEN + f"No changes to merge for branch {branch}. Skipping..." + RESET
-            )
+            print(GREEN + f"No changes to merge. \nSkipping..." + RESET)
             continue
 
         if not get_user_confirmation(
             "Do you want to merge this branch? (yes/y or no/n): "
         ):
-            print(CYAN + "Skipping..." + RESET)
+            print(CYAN + "\nSkipping..." + RESET)
             continue
 
         # Checkout the branch
-        print(CYAN + f"Checking out {branch}..." + RESET)
+        print(CYAN + f"Checking out..." + RESET)
         _, stderr, returncode = run_git_command(["git", "checkout", branch], repo_path)
         if returncode != 0:
             print(RED + f"Error checking out branch {branch}: {stderr}" + RESET)
             continue
 
         # Merge
-        print(CYAN + f"Merging from {merge_from} into {branch}..." + RESET)
+        print(CYAN + f"Merging from {merge_from}..." + RESET)
         stdout, stderr, returncode = run_git_command(
             ["git", "merge", merge_from], repo_path
         )
@@ -138,7 +130,7 @@ def main():
             if not handle_merge_error():
                 continue
         else:
-            print(GREEN + f"Merge successful for branch {branch}." + RESET)
+            print(GREEN + f"Merge successful." + RESET)
 
         # Commit the merge
         commit_message = f"merged in {merge_from}"
@@ -150,10 +142,10 @@ def main():
                 print(GREEN + f"No changes to commit for branch {branch}." + RESET)
 
         # Push the changes
-        print(CYAN + f"Pushing branch {branch}..." + RESET)
+        print(CYAN + f"Pushing branch..." + RESET)
         _, stderr, returncode = run_git_command(["git", "push"], repo_path)
         if returncode != 0:
-            print(RED + f"Error pushing branch {branch}: {stderr}" + RESET)
+            print(RED + f"Error pushing branc: {stderr}" + RESET)
             if not handle_merge_error():
                 continue
 
