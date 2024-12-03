@@ -28,8 +28,10 @@ def get_user_confirmation(prompt):
         response = input(CYAN + prompt + RESET).strip().lower()
         if response in {"yes", "y"}:
             return True
-        else:
+        elif response in {"no", "n"}:
             return False
+        else:
+            print(RED + "Invalid input. Please enter 'yes' or 'no'." + RESET)
 
 
 def check_if_merge_needed(branch, merge_from, repo_path):
@@ -67,8 +69,31 @@ def handle_merge_error():
             print(RED + "Invalid input. Please enter 1 or 2." + RESET)
 
 
+def reset_submodule_changes(submodule_path, repo_path):
+    """Reset any changes made to the submodule."""
+    print(YELLOW + f"Checking for changes in {submodule_path}..." + RESET)
+    stdout, stderr, returncode = run_git_command(
+        ["git", "status", "--porcelain", submodule_path], repo_path
+    )
+    if returncode != 0:
+        print(RED + f"Error checking submodule status: {stderr}" + RESET)
+        return False
+
+    if stdout.strip():  # If there are changes
+        print(YELLOW + f"Resetting changes in {submodule_path}..." + RESET)
+        _, stderr, returncode = run_git_command(
+            ["git", "reset", "--hard", submodule_path], repo_path
+        )
+        if returncode != 0:
+            print(RED + f"Error resetting submodule changes: {stderr}" + RESET)
+            return False
+
+    return True
+
+
 def main():
     repo_path = "/Users/niman/Desktop/Pad/Work/Trajekt/ArcMachine/"
+    submodule_to_exclude = "core_utils/"
     os.chdir(repo_path)
 
     # Get the list of local branches
@@ -81,7 +106,6 @@ def main():
 
     for branch in branches:
         if branch.startswith("deploy"):
-            # print(CYAN + f"\nSkipping deploy branch" + RESET)
             continue
 
         print("\n" + "=" * 50)  # Separation line
@@ -132,8 +156,13 @@ def main():
         else:
             print(GREEN + f"Merge successful." + RESET)
 
+        # Reset any submodule changes
+        if not reset_submodule_changes(submodule_to_exclude, repo_path):
+            print(RED + f"Skipping commit due to submodule reset failure." + RESET)
+            continue
+
         # Commit the merge
-        commit_message = f"merged in {merge_from}"
+        commit_message = f"merged in {merge_from} without {submodule_to_exclude}"
         stdout, stderr, returncode = run_git_command(
             ["git", "commit", "-am", commit_message], repo_path
         )
@@ -145,7 +174,7 @@ def main():
         print(CYAN + f"Pushing branch..." + RESET)
         _, stderr, returncode = run_git_command(["git", "push"], repo_path)
         if returncode != 0:
-            print(RED + f"Error pushing branc: {stderr}" + RESET)
+            print(RED + f"Error pushing branch: {stderr}" + RESET)
             if not handle_merge_error():
                 continue
 
