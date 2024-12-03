@@ -30,6 +30,8 @@ def get_user_confirmation(prompt):
             return True
         elif response in {"no", "n"}:
             return False
+        else:
+            print(RED + "Invalid input. Please enter 'yes' or 'no'." + RESET)
 
 
 def check_if_merge_needed(branch, merge_from, repo_path):
@@ -67,25 +69,27 @@ def handle_merge_error():
             print(RED + "Invalid input. Please enter 1 or 2." + RESET)
 
 
-def reset_submodule_changes(submodule_path, repo_path):
-    """Reset any changes made to the submodule."""
-    print(YELLOW + f"Checking for changes in {submodule_path}..." + RESET)
+def exclude_submodule(submodule_path, repo_path):
+    """Exclude the specified submodule from the merge."""
+    print(YELLOW + f"Temporarily removing {submodule_path} from tracking..." + RESET)
     stdout, stderr, returncode = run_git_command(
-        ["git", "status", "--porcelain", submodule_path], repo_path
+        ["git", "rm", "-r", "--cached", submodule_path], repo_path
     )
     if returncode != 0:
-        print(RED + f"Error checking submodule status: {stderr}" + RESET)
+        print(RED + f"Error excluding {submodule_path}: {stderr}" + RESET)
         return False
+    return True
 
-    if stdout.strip():  # If there are changes
-        print(YELLOW + f"Resetting changes in {submodule_path}..." + RESET)
-        _, stderr, returncode = run_git_command(
-            ["git", "reset", "--hard", submodule_path], repo_path
-        )
-        if returncode != 0:
-            print(RED + f"Error resetting submodule changes: {stderr}" + RESET)
-            return False
 
+def restore_submodule(submodule_path, repo_path):
+    """Restore the submodule after the merge."""
+    print(GREEN + f"Restoring {submodule_path} to tracking..." + RESET)
+    stdout, stderr, returncode = run_git_command(
+        ["git", "checkout", "--", submodule_path], repo_path
+    )
+    if returncode != 0:
+        print(RED + f"Error restoring {submodule_path}: {stderr}" + RESET)
+        return False
     return True
 
 
@@ -142,10 +146,15 @@ def main():
             print(RED + f"Error checking out branch {branch}: {stderr}" + RESET)
             continue
 
+        # Exclude submodule
+        if not exclude_submodule(submodule_to_exclude, repo_path):
+            continue
+
         # Merge
         print(CYAN + f"Merging from {merge_from}..." + RESET)
         stdout, stderr, returncode = run_git_command(
-            ["git", "merge", merge_from], repo_path
+            ["git", "merge", merge_from, "-X", f"subtree={submodule_to_exclude}"],
+            repo_path,
         )
         if returncode != 0:
             print(RED + f"Merge conflict or error: {stderr}" + RESET)
@@ -153,11 +162,6 @@ def main():
                 continue
         else:
             print(GREEN + f"Merge successful." + RESET)
-
-        # Reset any submodule changes
-        if not reset_submodule_changes(submodule_to_exclude, repo_path):
-            print(RED + f"Skipping commit due to submodule reset failure." + RESET)
-            continue
 
         # Commit the merge
         commit_message = f"merged in {merge_from} without {submodule_to_exclude}"
@@ -167,6 +171,10 @@ def main():
         if returncode != 0:
             if "nothing to commit" in stderr.lower():
                 print(GREEN + f"No changes to commit for branch {branch}." + RESET)
+
+        # Restore submodule
+        if not restore_submodule(submodule_to_exclude, repo_path):
+            continue
 
         # Push the changes
         print(CYAN + f"Pushing branch..." + RESET)
