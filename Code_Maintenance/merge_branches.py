@@ -30,8 +30,6 @@ def get_user_confirmation(prompt):
             return True
         elif response in {"no", "n"}:
             return False
-        else:
-            print(RED + "Invalid input. Please enter 'yes' or 'no'." + RESET)
 
 
 def check_if_merge_needed(branch, merge_from, repo_path):
