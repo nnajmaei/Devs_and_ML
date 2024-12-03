@@ -93,6 +93,18 @@ def restore_submodule(submodule_path, repo_path):
     return True
 
 
+def pull_recursively(repo_path):
+    """Pull the latest changes recursively for the current branch."""
+    print(CYAN + "Pulling recursively..." + RESET)
+    stdout, stderr, returncode = run_git_command(
+        ["git", "pull", "--recurse-submodules"], repo_path
+    )
+    if returncode != 0:
+        print(RED + f"Error pulling changes: {stderr}" + RESET)
+        return False
+    return True
+
+
 def main():
     repo_path = "/Users/niman/Desktop/Pad/Work/Trajekt/ArcMachine/"
     submodule_to_exclude = "core_utils/"
@@ -140,10 +152,14 @@ def main():
             continue
 
         # Checkout the branch
-        print(CYAN + f"Checking out..." + RESET)
+        print(CYAN + f"Checking out branch {branch}..." + RESET)
         _, stderr, returncode = run_git_command(["git", "checkout", branch], repo_path)
         if returncode != 0:
             print(RED + f"Error checking out branch {branch}: {stderr}" + RESET)
+            continue
+
+        # Pull recursively to ensure branch is up to date
+        if not pull_recursively(repo_path):
             continue
 
         # Exclude submodule
