@@ -28,10 +28,8 @@ def get_user_confirmation(prompt):
         response = input(CYAN + prompt + RESET).strip().lower()
         if response in {"yes", "y"}:
             return True
-        elif response in {"no", "n"}:
-            return False
         else:
-            print(RED + "Invalid input. Please enter 'yes' or 'no'." + RESET)
+            return False
 
 
 def check_if_merge_needed(branch, merge_from, repo_path):
@@ -69,30 +67,6 @@ def handle_merge_error():
             print(RED + "Invalid input. Please enter 1 or 2." + RESET)
 
 
-def exclude_submodule(submodule_path, repo_path):
-    """Exclude the specified submodule from the merge."""
-    print(YELLOW + f"Temporarily removing {submodule_path} from tracking..." + RESET)
-    stdout, stderr, returncode = run_git_command(
-        ["git", "rm", "-r", "--cached", submodule_path], repo_path
-    )
-    if returncode != 0:
-        print(RED + f"Error excluding {submodule_path}: {stderr}" + RESET)
-        return False
-    return True
-
-
-def restore_submodule(submodule_path, repo_path):
-    """Restore the submodule after the merge."""
-    print(GREEN + f"Restoring {submodule_path} to tracking..." + RESET)
-    stdout, stderr, returncode = run_git_command(
-        ["git", "checkout", "--", submodule_path], repo_path
-    )
-    if returncode != 0:
-        print(RED + f"Error restoring {submodule_path}: {stderr}" + RESET)
-        return False
-    return True
-
-
 def pull_recursively(repo_path):
     """Pull the latest changes recursively for the current branch."""
     print(CYAN + "Pulling recursively..." + RESET)
@@ -107,7 +81,6 @@ def pull_recursively(repo_path):
 
 def main():
     repo_path = "/Users/niman/Desktop/Pad/Work/Trajekt/ArcMachine/"
-    submodule_to_exclude = "core_utils/"
     os.chdir(repo_path)
 
     # Get the list of local branches
@@ -152,7 +125,7 @@ def main():
             continue
 
         # Checkout the branch
-        print(CYAN + f"Checking out branch {branch}..." + RESET)
+        print(CYAN + f"Checking out..." + RESET)
         _, stderr, returncode = run_git_command(["git", "checkout", branch], repo_path)
         if returncode != 0:
             print(RED + f"Error checking out branch {branch}: {stderr}" + RESET)
@@ -162,15 +135,10 @@ def main():
         if not pull_recursively(repo_path):
             continue
 
-        # Exclude submodule
-        if not exclude_submodule(submodule_to_exclude, repo_path):
-            continue
-
         # Merge
         print(CYAN + f"Merging from {merge_from}..." + RESET)
         stdout, stderr, returncode = run_git_command(
-            ["git", "merge", merge_from, "-X", f"subtree={submodule_to_exclude}"],
-            repo_path,
+            ["git", "merge", merge_from], repo_path
         )
         if returncode != 0:
             print(RED + f"Merge conflict or error: {stderr}" + RESET)
@@ -180,17 +148,13 @@ def main():
             print(GREEN + f"Merge successful." + RESET)
 
         # Commit the merge
-        commit_message = f"merged in {merge_from} without {submodule_to_exclude}"
+        commit_message = f"merged in {merge_from}"
         stdout, stderr, returncode = run_git_command(
             ["git", "commit", "-am", commit_message], repo_path
         )
         if returncode != 0:
             if "nothing to commit" in stderr.lower():
                 print(GREEN + f"No changes to commit for branch {branch}." + RESET)
-
-        # Restore submodule
-        if not restore_submodule(submodule_to_exclude, repo_path):
-            continue
 
         # Push the changes
         print(CYAN + f"Pushing branch..." + RESET)
