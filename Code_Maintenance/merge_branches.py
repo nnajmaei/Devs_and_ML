@@ -92,7 +92,7 @@ def main():
     branches = [line.strip("* ").strip() for line in stdout.splitlines()]
 
     for branch in branches:
-        if branch.startswith("deploy"):
+        if branch.startswith("deploy/main"):
             continue
 
         print("\n" + "=" * 50)  # Separation line
@@ -100,7 +100,13 @@ def main():
         print("=" * 50)
 
         # Determine the correct branch to merge from
-        if branch.startswith("dev/"):
+        if branch == "deploy/dev":
+            merge_from = "origin/deploy/staging"
+        elif branch == "deploy/staging":
+            merge_from = "origin/deploy/beta"
+        elif branch == "deploy/beta":
+            merge_from = "origin/deploy/main"
+        elif branch.startswith("dev/"):
             merge_from = "origin/deploy/dev"
         elif branch.startswith("staging/"):
             merge_from = "origin/deploy/staging"
