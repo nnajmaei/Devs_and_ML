@@ -114,6 +114,8 @@ def main():
             merge_from = "origin/deploy/beta"
         elif branch.startswith("main/"):
             merge_from = "origin/deploy/main"
+        elif branch.startswith("release/"):
+            merge_from = "origin/deploy/staging"
         else:
             print(RED + f"Unsupported branch pattern.\nSkipping..." + RESET)
             continue
