@@ -61,7 +61,7 @@ while true; do
     fi
 done
 
-tasks_to_run=(1 2 3 4 5 6 7 8)
+tasks_to_run=(1 2 3 4 5 6 7 8 9)
 
 if [[ "$user_input" == "y" ]]; then
     # Perform all tasks
@@ -102,7 +102,7 @@ echo "--------------------------------------------------------------------------
 if [[ " ${tasks_to_run[*]} " =~ " 1 " ]]; then
     echo -e "${DARK_BLUE}1- Removing unused imports using Autoflake...${NC}"
     echo -e "${GRAY}Inclusions: ArcPyUtils, notebooks, notebooks-updated, daemons${NC}"
-    autoflake --remove-all-unused-imports --ignore-pass-after-docstring --recursive --in-place ./ArcPyUtils ./notebooks  ./notebooks-updated  ./daemons
+    autoflake --remove-all-unused-imports --ignore-pass-after-docstring --recursive --in-place ./ArcPyUtils ./notebooks  ./notebooks-updated  ./daemons  >/dev/null 2>&1
     echo " "
     autoflake_changed_files_count=$(git diff --name-only | wc -l)
 
@@ -121,7 +121,7 @@ fi
 if [[ " ${tasks_to_run[*]} " =~ " 2 " ]]; then
     echo -e "${DARK_BLUE}2- Formatting code using Black...${NC}"
     echo -e "${GRAY}Exclusions: None${NC}"
-    black ./
+    black ./  >/dev/null 2>&1
     echo " "
     changed_files_count=$(git diff --name-only | wc -l)
 
@@ -142,8 +142,8 @@ if [[ " ${tasks_to_run[*]} " =~ " 3 " ]]; then
     echo -e "${GRAY}Directories: ArcPyUtils, daemons${NC}"
     isort_directories=("ArcPyUtils" "daemons")
     full_paths=("${isort_directories[@]/#/$DEFAULT_DIR}")
-    isort "${full_paths[@]}"
-    black "${full_paths[@]}"
+    isort "${full_paths[@]}" >/dev/null 2>&1
+    black "${full_paths[@]}" >/dev/null 2>&1
     echo " "
     changed_files_count=$(git diff --name-only | wc -l)
 
@@ -162,7 +162,7 @@ fi
 if [[ " ${tasks_to_run[*]} " =~ " 4 " ]]; then
     echo -e "${DARK_BLUE}4- Formatting JSONs using Prettier...${NC}"
     echo -e "${GRAY}Inclusions: All JSON files${NC}"
-    npx prettier --write "**/*.json"
+    npx prettier --write "**/*.json"  >/dev/null 2>&1
     echo " "
     changed_files_count=$(git diff --name-only | wc -l)
 
@@ -181,7 +181,7 @@ fi
 if [[ " ${tasks_to_run[*]} " =~ " 5 " ]]; then
     echo -e "${DARK_BLUE}5- Clearing Jupyter notebook outputs...${NC}"
     echo -e "${GRAY}Inclusions: All Jupyter notebooks in notebooks, notebooks-updated${NC}"
-    python /Users/niman/Devs_and_ML/Code_Maintenance/clear_notebook_outputs.py
+    python /Users/niman/Devs_and_ML/Code_Maintenance/clear_notebook_outputs.py  >/dev/null 2>&1
     echo " "
     changed_files_count=$(git diff --name-only | wc -l)
 
@@ -201,7 +201,7 @@ if [[ " ${tasks_to_run[*]} " =~ " 6 " ]]; then
     echo -e "${DARK_BLUE}6- Updating Jupyter notebook kernels...${NC}"
 
     # Call the external Python script to update kernels
-    python3 /Users/niman/Devs_and_ML/Code_Maintenance/check_and_update_kernels.py "$project_directory"
+    python3 /Users/niman/Devs_and_ML/Code_Maintenance/check_and_update_kernels.py "$project_directory"  >/dev/null 2>&1
 
     echo " "
     changed_files_count=$(git diff --name-only | wc -l)
