@@ -72,12 +72,13 @@ elif [[ "$user_input" == "n" ]]; then
     echo "Available tasks:"
     echo "1- Removing unused imports using Autoflake"
     echo "2- Formatting code using Black"
-    echo "3- Formatting JSONs using Prettier"
-    echo "4- Clearing Jupyter notebook outputs"
-    echo "5- Updating Jupyter notebook kernels"
-    echo "6- Running Error ID Checker"
-    echo "7- Checking for 'daemons' imports in ArcPyUtils"
-    echo "8- Reporting missing imports in the project"
+    echo "3- Reordering imports using isort"
+    echo "4- Formatting JSONs using Prettier"
+    echo "5- Clearing Jupyter notebook outputs"
+    echo "6- Updating Jupyter notebook kernels"
+    echo "7- Running Error ID Checker"
+    echo "8- Checking for 'daemons' imports in ArcPyUtils"
+    echo "9- Reporting missing imports in the project"
     read -p "Enter the numbers associated with the tasks you want to perform (e.g., 1 4 3 or 1,4,3): " selected_tasks
     if is_valid_task_numbers "$selected_tasks"; then
         selected_tasks=$(normalize_task_input "$selected_tasks")
@@ -135,9 +136,30 @@ if [[ " ${tasks_to_run[*]} " =~ " 2 " ]]; then
     echo "--------------------------------------------------------------------------------"
 fi
 
-# Check if task 3 is selected
+
+# Check if task 2 is selected
 if [[ " ${tasks_to_run[*]} " =~ " 3 " ]]; then
-    echo -e "${DARK_BLUE}3- Formatting JSONs using Prettier...${NC}"
+    echo -e "${DARK_BLUE}3- Running isort on ArcPyUtils and daemons, then formatting with Black...${NC}"
+    echo -e "${GRAY}Directories: ArcPyUtils, daemons${NC}"
+    isort ArcPyUtils daemons
+    black .
+    echo " "
+    changed_files_count=$(git diff --name-only | wc -l)
+
+    if [ "$changed_files_count" -ne 0 ]; then
+        echo -e "${RED}Number of changed files: $changed_files_count${NC}"
+        echo -e "${GRAY}Files Changed :${NC}"
+        git diff --name-only
+        git add .
+    else
+        echo -e "${GREEN}No Files Changed${NC}"
+    fi
+    echo "--------------------------------------------------------------------------------"
+fi
+
+# Check if task 3 is selected
+if [[ " ${tasks_to_run[*]} " =~ " 4 " ]]; then
+    echo -e "${DARK_BLUE}4- Formatting JSONs using Prettier...${NC}"
     echo -e "${GRAY}Inclusions: All JSON files${NC}"
     npx prettier --write "**/*.json"
     echo " "
@@ -155,8 +177,8 @@ if [[ " ${tasks_to_run[*]} " =~ " 3 " ]]; then
 fi
 
 # Check if task 4 is selected
-if [[ " ${tasks_to_run[*]} " =~ " 4 " ]]; then
-    echo -e "${DARK_BLUE}4- Clearing Jupyter notebook outputs...${NC}"
+if [[ " ${tasks_to_run[*]} " =~ " 5 " ]]; then
+    echo -e "${DARK_BLUE}5- Clearing Jupyter notebook outputs...${NC}"
     echo -e "${GRAY}Inclusions: All Jupyter notebooks in notebooks, notebooks-updated${NC}"
     python /Users/niman/Devs_and_ML/Code_Maintenance/clear_notebook_outputs.py
     echo " "
@@ -174,8 +196,8 @@ if [[ " ${tasks_to_run[*]} " =~ " 4 " ]]; then
 fi
 
 # Check if task 5 is selected (now updating Jupyter notebook kernels)
-if [[ " ${tasks_to_run[*]} " =~ " 5 " ]]; then
-    echo -e "${DARK_BLUE}5- Updating Jupyter notebook kernels...${NC}"
+if [[ " ${tasks_to_run[*]} " =~ " 6 " ]]; then
+    echo -e "${DARK_BLUE}6- Updating Jupyter notebook kernels...${NC}"
 
     # Call the external Python script to update kernels
     python3 /Users/niman/Devs_and_ML/Code_Maintenance/check_and_update_kernels.py "$project_directory"
@@ -195,8 +217,8 @@ if [[ " ${tasks_to_run[*]} " =~ " 5 " ]]; then
 fi
 
 # Check if task 6 is selected (Running Error ID Checker)
-if [[ " ${tasks_to_run[*]} " =~ " 6 " ]]; then
-    echo -e "${DARK_BLUE}6- Running Error ID Checker...${NC}"
+if [[ " ${tasks_to_run[*]} " =~ " 7 " ]]; then
+    echo -e "${DARK_BLUE}7- Running Error ID Checker...${NC}"
     #/Users/niman/Desktop/Pad/Work/Trajekt/ArcMachine/errorIDs_list/update_csv_from_google.sh
     /Users/niman/Desktop/Pad/Work/Trajekt/ArcMachine/errorIDs_list/update_json_file_from_csv.sh
     python3 /Users/niman/Devs_and_ML/Code_Maintenance/error_id_checker.py
@@ -204,15 +226,15 @@ if [[ " ${tasks_to_run[*]} " =~ " 6 " ]]; then
 fi
 
 # Check if task 7 is selected (Checking for 'daemons' imports in ArcPyUtils)
-if [[ " ${tasks_to_run[*]} " =~ " 7 " ]]; then
-    echo -e "${DARK_BLUE}7- Checking for 'daemons' imports in ArcPyUtils...${NC}"
+if [[ " ${tasks_to_run[*]} " =~ " 8 " ]]; then
+    echo -e "${DARK_BLUE}8- Checking for 'daemons' imports in ArcPyUtils...${NC}"
     python3 /Users/niman/Devs_and_ML/Code_Maintenance/check_daemon_imports.py
     echo "--------------------------------------------------------------------------------"
 fi
 
 # Check if task 8 is selected (now reporting missing imports)
-if [[ " ${tasks_to_run[*]} " =~ " 8 " ]]; then
-    echo -e "${DARK_BLUE}8- Reporting missing imports in the project...${NC}"
+if [[ " ${tasks_to_run[*]} " =~ " 9 " ]]; then
+    echo -e "${DARK_BLUE}9- Reporting missing imports in the project...${NC}"
     echo -e "${GRAY}Exclusions: EXCLUDED_DIRS (/arc, /arc_testing, /archive, /core_utils)${NC}"
     echo -e "${GRAY}Exclusions: EXCLUDED_FILES (TrajektBallDetection/trajektballdetection/circle_detection/new_hough_circle_detector.py, daemons/alpha_controller/tests/test_mock_alpha.py, daemons/pos_controller/MachineMotion_v4_6.py, daemons/wheel_speed_controller/controllers/gmc.py)${NC}"
     files_with_issues_count=$(python /Users/niman/Devs_and_ML/Code_Maintenance/check_missing_imports.py "$project_directory")
