@@ -136,13 +136,14 @@ if [[ " ${tasks_to_run[*]} " =~ " 2 " ]]; then
     echo "--------------------------------------------------------------------------------"
 fi
 
-
 # Check if task 2 is selected
 if [[ " ${tasks_to_run[*]} " =~ " 3 " ]]; then
     echo -e "${DARK_BLUE}3- Running isort on ArcPyUtils and daemons, then formatting with Black...${NC}"
     echo -e "${GRAY}Directories: ArcPyUtils, daemons${NC}"
-    isort ArcPyUtils daemons
-    black .
+    isort_directories=("ArcPyUtils" "daemons")
+    full_paths=("${isort_directories[@]/#/$DEFAULT_DIR}")
+    isort "${full_paths[@]}"
+    black "${full_paths[@]}"
     echo " "
     changed_files_count=$(git diff --name-only | wc -l)
 
