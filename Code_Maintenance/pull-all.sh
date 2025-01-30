@@ -48,6 +48,12 @@ while IFS= read -r -d '' git_dir; do
     if [ "$branch_count" -gt 0 ]; then
         # Iterate over each branch and pull changes
         while IFS= read -r branch; do
+            # Exclude the branch dev/imp/pylint-audit-main
+            if [ "$branch" == "dev/imp/pylint-audit-main" ]; then
+                echo "Skipping branch $branch"
+                continue
+            fi
+            
             echo "-----------------"
             echo "Pulling from branch $branch"
             git checkout "$branch"
@@ -88,10 +94,10 @@ while IFS= read -r -d '' git_dir; do
 
     # Navigate back to the original branch
     git checkout "$ORIGINAL_BRANCH" > /dev/null 2>&1 || continue
+
 done < <(find . -type d -name ".git" -print0)
 
 git pull --recurse-submodules
-
 
 # Print summary report
 echo "-----------------"

@@ -100,6 +100,9 @@ def main():
         print("=" * 50)
 
         # Determine the correct branch to merge from
+        if branch == "dev/imp/pylint-audit-main":
+            continue
+
         if branch == "deploy/dev":
             merge_from = "origin/deploy/staging"
         elif branch == "deploy/staging":

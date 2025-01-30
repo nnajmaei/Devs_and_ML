@@ -23,7 +23,7 @@ def process_folder(folder_path):
                 clear_outputs_and_execution_count(notebook_path)
 
 
-folders = ["./notebooks", "./notebooks-updated"]
+folders = ["./notebooks", "./notebooks-updated", "./manufacturing_notebooks"]
 for folder in folders:
     if os.path.exists(folder):
         process_folder(folder)
