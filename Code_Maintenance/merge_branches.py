@@ -100,11 +100,10 @@ def main():
         print("=" * 50)
 
         # Determine the correct branch to merge from
-        if branch == "dev/imp/pylint-audit-main":
-            continue
-
         if branch == "deploy/dev":
             merge_from = "origin/deploy/staging"
+        elif branch == "main/patch/bi-lights-bugs":
+            merge_from = "origin/deploy/dev"
         elif branch == "deploy/staging":
             merge_from = "origin/deploy/beta"
         elif branch == "deploy/beta":
