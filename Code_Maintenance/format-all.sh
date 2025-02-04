@@ -101,7 +101,7 @@ echo "--------------------------------------------------------------------------
 if [[ " ${tasks_to_run[*]} " =~ " 1 " ]]; then
     echo -e "${DARK_BLUE}1- Removing unused imports using Autoflake...${NC}"
     echo -e "${GRAY}Inclusions: ArcPyUtils, notebooks, notebooks-updated, daemons${NC}"
-    autoflake --remove-all-unused-imports --ignore-pass-after-docstring --recursive --in-place ./ArcPyUtils ./notebooks  ./notebooks-updated  ./daemons ./errorID_mgmt >/dev/null 2>&1
+    autoflake --remove-all-unused-imports --ignore-pass-after-docstring --recursive --in-place ./ArcPyUtils ./notebooks  ./notebooks-updated  ./daemons ./errorID_mgmt ./firmware ./machine-configs ./manufacturing_notebooks ./notebooks-updated ./TrajektBallDetection ./TrajektStereoVision  >/dev/null 2>&1
     echo " "
     autoflake_changed_files_count=$(git diff --name-only | wc -l)
 
@@ -139,7 +139,7 @@ fi
 if [[ " ${tasks_to_run[*]} " =~ " 3 " ]]; then
     echo -e "${DARK_BLUE}3- Running isort on ArcPyUtils and daemons, then formatting with Black...${NC}"
     echo -e "${GRAY}Directories: ArcPyUtils, daemons${NC}"
-    isort_directories=("ArcPyUtils" "daemons" "errorID_mgmt")
+    isort_directories=("ArcPyUtils" "daemons" "errorID_mgmt" "TrajektStereoVision" "TrajektBallDetection" "firmware" "machine-configs" "manufacturing_notebooks" "notebooks-updated")
     full_paths=("${isort_directories[@]/#/$DEFAULT_DIR}")
     isort "${full_paths[@]}" >/dev/null 2>&1
     black "${full_paths[@]}" >/dev/null 2>&1

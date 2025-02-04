@@ -109,6 +109,8 @@ def main():
             merge_from = "origin/deploy/beta"
         elif branch == "deploy/beta":
             merge_from = "origin/deploy/main"
+        elif branch == "dev/imp/websocket_refactoring_and_pylint_audit":
+            merge_from = "origin/dev/imp/pylint-fixing-error-codes"
         elif branch.startswith("dev/"):
             merge_from = "origin/deploy/dev"
         elif branch.startswith("staging/"):
