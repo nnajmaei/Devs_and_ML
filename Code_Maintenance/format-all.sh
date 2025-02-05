@@ -71,8 +71,8 @@ elif [[ "$user_input" == "n" ]]; then
     # Show the list of tasks and prompt for selection
     echo "Available tasks:"
     echo "1- Removing unused imports using Autoflake"
-    echo "2- Formatting code using Black"
-    echo "3- Reordering imports using isort"
+    echo "2- Reordering imports using isort"
+    echo "3- Formatting code using Black"
     echo "4- Formatting JSONs using Prettier"
     echo "5- Clearing Jupyter notebook outputs"
     echo "6- Updating Jupyter notebook kernels"
@@ -118,9 +118,14 @@ fi
 
 # Check if task 2 is selected
 if [[ " ${tasks_to_run[*]} " =~ " 2 " ]]; then
-    echo -e "${DARK_BLUE}2- Formatting code using Black...${NC}"
-    echo -e "${GRAY}Exclusions: None${NC}"
-    black ./  >/dev/null 2>&1
+    echo -e "${DARK_BLUE}2- Running isort on ArcPyUtils and daemons, then formatting with Black...${NC}"
+    echo -e "${GRAY}Directories: ArcPyUtils, daemons${NC}"
+    isort_directories=("ArcPyUtils" "daemons" "errorID_mgmt" "TrajektStereoVision" "TrajektBallDetection" "firmware" "machine-configs" "manufacturing_notebooks" "notebooks-updated")
+    full_paths=("${isort_directories[@]/#/$DEFAULT_DIR}")
+    full_paths+=("$DEFAULT_DIR/arc.py")
+    full_paths+=("$DEFAULT_DIR/mock_arc.py")
+    isort "${full_paths[@]}" >/dev/null 2>&1
+    black "${full_paths[@]}" >/dev/null 2>&1
     echo " "
     changed_files_count=$(git diff --name-only | wc -l)
 
@@ -137,14 +142,9 @@ fi
 
 # Check if task 3 is selected
 if [[ " ${tasks_to_run[*]} " =~ " 3 " ]]; then
-    echo -e "${DARK_BLUE}3- Running isort on ArcPyUtils and daemons, then formatting with Black...${NC}"
-    echo -e "${GRAY}Directories: ArcPyUtils, daemons${NC}"
-    isort_directories=("ArcPyUtils" "daemons" "errorID_mgmt" "TrajektStereoVision" "TrajektBallDetection" "firmware" "machine-configs" "manufacturing_notebooks" "notebooks-updated")
-    full_paths=("${isort_directories[@]/#/$DEFAULT_DIR}")
-    full_paths+=("$DEFAULT_DIR/arc.py")
-    full_paths+=("$DEFAULT_DIR/mock_arc.py")
-    isort "${full_paths[@]}" >/dev/null 2>&1
-    black "${full_paths[@]}" >/dev/null 2>&1
+    echo -e "${DARK_BLUE}3- Formatting code using Black...${NC}"
+    echo -e "${GRAY}Exclusions: None${NC}"
+    black ./  >/dev/null 2>&1
     echo " "
     changed_files_count=$(git diff --name-only | wc -l)
 
