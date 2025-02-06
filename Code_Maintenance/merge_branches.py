@@ -22,6 +22,18 @@ def run_git_command(command, cwd):
         return "", str(e), 1
 
 
+def get_current_branch(repo_path):
+    """Retrieve the current git branch."""
+    stdout, stderr, returncode = run_git_command(
+        ["git", "rev-parse", "--abbrev-ref", "HEAD"], repo_path
+    )
+    if returncode == 0:
+        return stdout
+    else:
+        print(RED + f"Error retrieving current branch: {stderr}" + RESET)
+        sys.exit(1)
+
+
 def get_user_confirmation(prompt):
     """Prompt the user for a yes/no confirmation."""
     while True:
@@ -83,7 +95,9 @@ def main():
     repo_path = "/Users/niman/Desktop/Pad/Work/Trajekt/ArcMachine/"
     os.chdir(repo_path)
 
-    # Get the list of local branches
+    # Capture the current branch
+    original_branch = get_current_branch(repo_path)
+
     stdout, stderr, returncode = run_git_command(["git", "branch"], repo_path)
     if returncode != 0:
         print(RED + f"Error listing branches: {stderr}" + RESET)
@@ -173,6 +187,12 @@ def main():
             print(RED + f"Error pushing branch: {stderr}" + RESET)
             if not handle_merge_error():
                 continue
+
+    # Switch back to original branch
+    print(CYAN + f"Switching back to original branch: {original_branch}" + RESET)
+    _, stderr, returncode = run_git_command(
+        ["git", "checkout", original_branch], repo_path
+    )
 
 
 if __name__ == "__main__":
