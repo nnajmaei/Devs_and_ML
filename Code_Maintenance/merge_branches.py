@@ -143,7 +143,7 @@ def main():
             continue
 
         if not get_user_confirmation(
-            "Do you want to merge this branch? (yes/y or no/n): "
+            f"Do you want to merge this branch with {merge_from}? (yes/y or no/n): "
         ):
             print(CYAN + "\nSkipping..." + RESET)
             continue
