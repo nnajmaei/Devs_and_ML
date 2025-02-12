@@ -77,7 +77,7 @@ elif [[ "$user_input" == "n" ]]; then
     echo "5- Clearing Jupyter notebook outputs"
     echo "6- Updating Jupyter notebook kernels"
     echo "7- Checking for 'daemons' imports in ArcPyUtils"
-    echo "8- Reporting missing imports in the project"
+    echo "8- Reporting EventIDs missing .value"
     read -p "Enter the numbers associated with the tasks you want to perform (e.g., 1 4 3 or 1,4,3): " selected_tasks
     if is_valid_task_numbers "$selected_tasks"; then
         selected_tasks=$(normalize_task_input "$selected_tasks")
@@ -225,25 +225,10 @@ if [[ " ${tasks_to_run[*]} " =~ " 7 " ]]; then
     echo "--------------------------------------------------------------------------------"
 fi
 
-# Check if task 8 is selected (now reporting missing imports)
+# Check if task 8 is selected (Reporting EventIDs missing .value)
 if [[ " ${tasks_to_run[*]} " =~ " 8 " ]]; then
-    echo -e "${DARK_BLUE}8- Reporting missing imports in the project...${NC}"
-    echo -e "${GRAY}Exclusions: EXCLUDED_DIRS (/arc, /arc_testing, /archive, /core_utils)${NC}"
-    echo -e "${GRAY}Exclusions: EXCLUDED_FILES (TrajektBallDetection/trajektballdetection/circle_detection/new_hough_circle_detector.py, daemons/alpha_controller/tests/test_mock_alpha.py, daemons/pos_controller/MachineMotion_v4_6.py, daemons/wheel_speed_controller/controllers/gmc.py)${NC}"
-    files_with_issues_count=$(python /Users/niman/Devs_and_ML/Code_Maintenance/check_missing_imports.py "$project_directory")
-
-    last_entry=$(echo "$files_with_issues_count" | tail -n 1)
-    before_last_entry=$(echo "$files_with_issues_count" | sed '$d')
-    before_last_entry=$(echo "$before_last_entry" | sed 's/[[:space:]]*$//')
-    last_entry=$(echo "$last_entry" | sed 's/^[[:space:]]*//')
-    last_entry_int=$(echo "$last_entry" | tr -d '[:space:]')
-
-    if (( last_entry_int != 0 )); then
-        echo -e "${RED}${before_last_entry}${NC}"
-        echo -e "${RED}Number of files with import issues: $last_entry_int${NC}"
-    else
-        echo -e "${GREEN}${before_last_entry}${NC}"
-    fi
+    echo -e "${DARK_BLUE}8- Reporting EventIDs missing .value...${NC}"
+    python3 /Users/niman/Devs_and_ML/Code_Maintenance/check_eventid_value.py
     echo "--------------------------------------------------------------------------------"
 fi
 
