@@ -4,7 +4,7 @@ import re
 # Define the directory to search in (current working directory)
 project_directory = "/Users/niman/Desktop/Pad/Work/Trajekt/ArcMachine"
 output_file = "eventid_lines.txt"
-excluded_folders = {}
+excluded_folders = {"arc/"}
 
 
 def extract_eventid_lines(directory):
@@ -14,7 +14,7 @@ def extract_eventid_lines(directory):
     )  # Case-insensitive search
     exclude_pattern = re.compile(r"\.value")  # Exclude lines containing .value
     exclude_pattern2 = re.compile(
-        r"error_id_module."
+        r'EventID.Process.NOT_IMPLEMENTED.value  # "process-not-implemented"'
     )  # Exclude lines containing error_id_module.
 
     # Walk through all files in the directory and subdirectories
@@ -33,7 +33,7 @@ def extract_eventid_lines(directory):
                             full_line = multi_line_buffer + line.strip()
                             if (
                                 eventid_pattern.search(full_line)
-                                and not exclude_pattern.search(full_line)
+                                and exclude_pattern.search(full_line)
                                 and not exclude_pattern2.search(full_line)
                             ):
                                 eventid_lines.append(

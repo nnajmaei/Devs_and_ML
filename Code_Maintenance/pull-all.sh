@@ -48,6 +48,12 @@ while IFS= read -r -d '' git_dir; do
     if [ "$branch_count" -gt 0 ]; then
         # Iterate over each branch and pull changes
         while IFS= read -r branch; do
+            # Skip the specified branch
+            if [ "$branch" == "dev/imp/websocket_refactoring_and_pylint_audit" ]; then
+                echo -e "${YELLOW}Skipping branch: $branch${NC}"
+                continue
+            fi
+            
             echo "-----------------"
             echo "Pulling from branch $branch"
             git checkout "$branch"
