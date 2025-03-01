@@ -227,7 +227,7 @@ fi
 
 # Check if task 8 is selected (Reporting EventIDs missing .value)
 if [[ " ${tasks_to_run[*]} " =~ " 8 " ]]; then
-    echo -e "${DARK_BLUE}8- Reporting EventIDs missing .value...${NC}"
+    echo -e "${DARK_BLUE}8- Reporting EventIDs with .value...${NC}"
     python3 /Users/niman/Devs_and_ML/Code_Maintenance/check_event_ids.py
     echo "--------------------------------------------------------------------------------"
 fi
@@ -244,10 +244,4 @@ if [ "$changed_files_count" -ne 0 ]; then
     echo " "
 else
     echo -e "${GREEN}No Files Changed${NC}"
-fi
-
-if (( last_entry_int != 0 )); then
-    echo -e "${RED}Files With Import Issues: $last_entry_int${NC}"
-else
-    echo -e "${GREEN}No Files with Import Issues${NC}"
 fi

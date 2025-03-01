@@ -50,9 +50,11 @@ def extract_eventid_lines(directory):
 
     # Save results to a text file
 
-    print(
-        f"Extraction complete. Found {len(eventid_lines)} lines. Results saved in '{output_file}'"
-    )
+    event_count = len(eventid_lines)
+    color = "\033[91m" if event_count > 0 else "\033[92m"  # Red if > 0, Green otherwise
+    reset = "\033[0m"
+
+    print(f"{color}Extraction complete. Found {event_count} lines.{reset}")
 
     for line in eventid_lines:
         print(line)

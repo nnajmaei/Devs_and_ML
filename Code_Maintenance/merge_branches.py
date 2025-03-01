@@ -104,6 +104,9 @@ def main():
         return
 
     branches = [line.strip("* ").strip() for line in stdout.splitlines()]
+    priority_branches = ["deploy/beta", "deploy/staging", "deploy/dev"]
+    remaining_branches = [b for b in branches if b not in priority_branches]
+    branches = priority_branches + remaining_branches
 
     for branch in branches:
         if branch.startswith("deploy/main"):
@@ -114,6 +117,8 @@ def main():
         print("=" * 50)
 
         # Determine the correct branch to merge from
+        if branch == "dev/imp/websocket_refactoring_and_pylint_audit":
+            continue
         if branch == "deploy/dev":
             merge_from = "origin/deploy/staging"
         elif branch == "main/patch/bi-lights-bugs":
