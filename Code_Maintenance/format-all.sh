@@ -125,7 +125,6 @@ if [[ " ${tasks_to_run[*]} " =~ " 2 " ]]; then
     full_paths+=("$DEFAULT_DIR/arc.py")
     full_paths+=("$DEFAULT_DIR/mock_arc.py")
     isort "${full_paths[@]}" >/dev/null 2>&1
-    black "${full_paths[@]}" >/dev/null 2>&1
     echo " "
     changed_files_count=$(git diff --name-only | wc -l)
 
