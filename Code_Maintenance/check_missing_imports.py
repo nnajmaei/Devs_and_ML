@@ -4,7 +4,7 @@ import ast
 import importlib.util
 
 # Directories and files to exclude
-EXCLUDED_DIRS = ["/arc", "/arc_testing", "/archive", "/core_utils"]
+EXCLUDED_DIRS = ["/arc", "/arc_testing", "/archive"]
 
 EXCLUDED_FILES = [
     "TrajektBallDetection/trajektballdetection/circle_detection/new_hough_circle_detector.py",
