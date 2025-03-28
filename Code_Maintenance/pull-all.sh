@@ -138,3 +138,8 @@ echo "You are on Branch:"
 echo -e "${PURPLE}$ORIGINAL_BRANCH${NC}"
 echo "-----------------"
 echo "-----------------"
+# Run branch_management.py
+echo -e "${PURPLE}Running branch_management.py...${NC}"
+python3 /Users/niman/Devs_and_ML/Code_Maintenance/branch_management.py
+echo "-----------------"
+echo "-----------------"
