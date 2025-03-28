@@ -1,6 +1,6 @@
 import os
 import subprocess
-from datetime import datetime
+from datetime import datetime, timedelta
 
 # --- CONFIGURATION ---
 REPO_PATH = "/Users/niman/Desktop/Pad/Work/Trajekt/ArcMachine"
@@ -53,7 +53,9 @@ def read_saved_branches():
             if not line.strip():
                 continue
             try:
-                date_str, branch_name = line.strip().rsplit(" ", 1)
+                date_str, branch_name = line.strip().split(" - ", 1)
+                branch_name = branch_name.replace(" ****", "").strip()
+
                 saved[branch_name.strip()] = date_str.strip()
             except ValueError:
                 continue
@@ -61,10 +63,17 @@ def read_saved_branches():
 
 
 def save_branch_list(branches_with_dates):
-    """Saves branch list ordered by latest date first"""
-    branch_items = [
-        (branch, date_str) for branch, date_str in branches_with_dates.items()
+    """Saves branch list with priority branches first, then the rest by latest date.
+    Adds '****' to branches inactive for more than 3 months.
+    """
+    priority_order = [
+        "origin/deploy/main",
+        "origin/deploy/beta",
+        "origin/deploy/staging",
+        "origin/deploy/dev",
     ]
+    priority_branches = []
+    other_branches = []
 
     def parse_date(date_str):
         try:
@@ -72,11 +81,28 @@ def save_branch_list(branches_with_dates):
         except Exception:
             return datetime.min
 
-    sorted_items = sorted(branch_items, key=lambda x: parse_date(x[1]), reverse=True)
+    two_months_ago = datetime.now().astimezone() - timedelta(days=60)
+
+    for branch, date_str in branches_with_dates.items():
+        if branch in priority_order:
+            priority_branches.append((branch, date_str))
+        else:
+            other_branches.append((branch, date_str))
+
+    # Sort the non-priority branches by date
+    sorted_others = sorted(other_branches, key=lambda x: parse_date(x[1]), reverse=True)
+
+    # Sort the priority branches by the defined order
+    sorted_priority = sorted(
+        priority_branches, key=lambda x: priority_order.index(x[0])
+    )
 
     with open(FILE_NAME, "w") as f:
-        for branch, date_str in sorted_items:
-            f.write(f"{date_str} {branch}\n")
+        for branch, date_str in sorted_priority + sorted_others:
+            display_branch = branch
+            if parse_date(date_str) < two_months_ago:
+                display_branch += " ****"
+            f.write(f"{date_str} - {display_branch}\n")
 
 
 def main():
