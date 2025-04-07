@@ -9,7 +9,7 @@ GRAY='\033[2;37m'  # Dim white
 NC='\033[0m' # No Color
 
 # Default directory
-DEFAULT_DIR="/Users/niman/Desktop/Pad/Work/Trajekt/ArcMachine/"
+DEFAULT_DIR="$(pwd)"
 echo "--------------------------------------------------------------------------------"
 echo -e "${BLUE}Starting format-all.sh script...${NC}"
 echo " "
@@ -100,8 +100,11 @@ echo "--------------------------------------------------------------------------
 # Check if task 1 is selected
 if [[ " ${tasks_to_run[*]} " =~ " 1 " ]]; then
     echo -e "${DARK_BLUE}1- Removing unused imports using Autoflake...${NC}"
-    echo -e "${GRAY}Inclusions: ArcPyUtils, notebooks, notebooks-updated, daemons${NC}"
-    autoflake --remove-all-unused-imports --ignore-pass-after-docstring --recursive --in-place ./ArcPyUtils ./notebooks  ./core_utils ./notebooks-updated  ./daemons ./event_id_mgmt ./firmware ./machine-configs ./manufacturing_notebooks ./notebooks-updated ./TrajektBallDetection ./TrajektStereoVision ./arc.py ./mock_arc.py ./MockAMPMotor  >/dev/null 2>&1
+    if [ "$REPO_ROOT" == "/Users/niman/Desktop/Pad/Work/Trajekt/ArcMachine" ]; then
+        autoflake --remove-all-unused-imports --ignore-pass-after-docstring --recursive --in-place ./ArcPyUtils ./notebooks  ./core_utils ./notebooks-updated  ./daemons ./event_id_mgmt ./firmware ./machine-configs ./manufacturing_notebooks ./notebooks-updated ./TrajektBallDetection ./TrajektStereoVision ./arc.py ./mock_arc.py ./MockAMPMotor  >/dev/null 2>&1
+    else
+        autoflake --remove-all-unused-imports --ignore-pass-after-docstring --recursive --in-place .
+    fi
     echo " "
     autoflake_changed_files_count=$(git diff --name-only | wc -l)
 
@@ -119,12 +122,15 @@ fi
 # Check if task 2 is selected
 if [[ " ${tasks_to_run[*]} " =~ " 2 " ]]; then
     echo -e "${DARK_BLUE}2- Running isort on ArcPyUtils and daemons, then formatting with Black...${NC}"
-    echo -e "${GRAY}Directories: ArcPyUtils, daemons${NC}"
     isort_directories=("ArcPyUtils" "daemons" "core_utils"  "event_id_mgmt" "TrajektStereoVision" "TrajektBallDetection" "firmware" "machine-configs" "manufacturing_notebooks" "notebooks-updated" "MockAMPMotor")
     full_paths=("${isort_directories[@]/#/$DEFAULT_DIR}")
     full_paths+=("$DEFAULT_DIR/arc.py")
     full_paths+=("$DEFAULT_DIR/mock_arc.py")
-    isort "${full_paths[@]}" >/dev/null 2>&1
+    if [ "$REPO_ROOT" == "/Users/niman/Desktop/Pad/Work/Trajekt/ArcMachine" ]; then
+        isort "${full_paths[@]}" >/dev/null 2>&1
+    else
+        isort . >/dev/null 2>&1
+    fi
     echo " "
     changed_files_count=$(git diff --name-only | wc -l)
 
@@ -142,7 +148,6 @@ fi
 # Check if task 3 is selected
 if [[ " ${tasks_to_run[*]} " =~ " 3 " ]]; then
     echo -e "${DARK_BLUE}3- Formatting code using Black...${NC}"
-    echo -e "${GRAY}Exclusions: None${NC}"
     black ./  >/dev/null 2>&1
     echo " "
     changed_files_count=$(git diff --name-only | wc -l)
@@ -161,7 +166,6 @@ fi
 # Check if task 4 is selected
 if [[ " ${tasks_to_run[*]} " =~ " 4 " ]]; then
     echo -e "${DARK_BLUE}4- Formatting JSONs using Prettier...${NC}"
-    echo -e "${GRAY}Inclusions: All JSON files${NC}"
     npx prettier --write "**/*.json"  >/dev/null 2>&1
     echo " "
     changed_files_count=$(git diff --name-only | wc -l)
@@ -178,9 +182,8 @@ if [[ " ${tasks_to_run[*]} " =~ " 4 " ]]; then
 fi
 
 # Check if task 5 is selected
-if [[ " ${tasks_to_run[*]} " =~ " 5 " ]]; then
+if [[ " ${tasks_to_run[*]} " =~ " 5 " ]] && [ "$REPO_ROOT" == "/Users/niman/Desktop/Pad/Work/Trajekt/ArcMachine" ]; then
     echo -e "${DARK_BLUE}5- Clearing Jupyter notebook outputs...${NC}"
-    echo -e "${GRAY}Inclusions: All Jupyter notebooks in notebooks, notebooks-updated${NC}"
     python /Users/niman/Devs_and_ML/Code_Maintenance/clear_notebook_outputs.py  >/dev/null 2>&1
     echo " "
     changed_files_count=$(git diff --name-only | wc -l)
@@ -197,7 +200,7 @@ if [[ " ${tasks_to_run[*]} " =~ " 5 " ]]; then
 fi
 
 # Check if task 6 is selected (now updating Jupyter notebook kernels)
-if [[ " ${tasks_to_run[*]} " =~ " 6 " ]]; then
+if [[ " ${tasks_to_run[*]} " =~ " 6 " ]] && [ "$REPO_ROOT" == "/Users/niman/Desktop/Pad/Work/Trajekt/ArcMachine" ]; then
     echo -e "${DARK_BLUE}6- Updating Jupyter notebook kernels...${NC}"
 
     # Call the external Python script to update kernels
@@ -218,14 +221,14 @@ if [[ " ${tasks_to_run[*]} " =~ " 6 " ]]; then
 fi
 
 # Check if task 7 is selected (Checking for 'daemons' imports in ArcPyUtils)
-if [[ " ${tasks_to_run[*]} " =~ " 7 " ]]; then
+if [[ " ${tasks_to_run[*]} " =~ " 7 " ]] && [ "$REPO_ROOT" == "/Users/niman/Desktop/Pad/Work/Trajekt/ArcMachine" ]; then
     echo -e "${DARK_BLUE}7- Checking for 'daemons' imports in ArcPyUtils...${NC}"
     python3 /Users/niman/Devs_and_ML/Code_Maintenance/check_daemon_imports.py
     echo "--------------------------------------------------------------------------------"
 fi
 
 # Check if task 8 is selected (Reporting EventIDs missing .value)
-if [[ " ${tasks_to_run[*]} " =~ " 8 " ]]; then
+if [[ " ${tasks_to_run[*]} " =~ " 8 " ]] && [ "$REPO_ROOT" == "/Users/niman/Desktop/Pad/Work/Trajekt/ArcMachine" ]; then
     echo -e "${DARK_BLUE}8- Reporting EventIDs with .value...${NC}"
     python3 /Users/niman/Devs_and_ML/Code_Maintenance/check_event_ids.py
     echo "--------------------------------------------------------------------------------"

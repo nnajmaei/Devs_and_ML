@@ -8,9 +8,6 @@ BLUE='\033[0;34m'
 PURPLE='\033[0;35m'
 NC='\033[0m' # No Color
 
-# Store the current branch
-ORIGINAL_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-
 # Variables to track successful and failed pulls
 SUCCESSFUL_PULLS=0
 FAILED_PULLS=0
@@ -23,15 +20,24 @@ FAILED_BRANCHES=()
 NO_CHANGES_BRANCHES=()
 DELETED_BRANCHES_LIST=()
 
-# Navigate to the specified directory
-cd "/Users/niman/Desktop/Pad/Work/Trajekt/ArcMachine/" || exit
+# Save current directory (the one the script was *called* from)
+REPO_ROOT="$(pwd)"
+
+# Ensure we’re inside a git repo
+if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+    echo -e "${RED}Error: This script must be run inside a Git repository.${NC}"
+    exit 1
+fi
+
+# Store the current branch
+ORIGINAL_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
 # Fetch the latest changes and prune remote branches in the repository directory
 git fetch --all --prune
 git remote prune origin
 
-# Trap for any errors or when script exits prematurely
-trap 'git checkout "$ORIGINAL_BRANCH"' EXIT
+# Trap to ensure we return to the original branch before exit
+trap 'cd "$REPO_ROOT" && git checkout "$ORIGINAL_BRANCH"' EXIT
 
 # Find all git repositories recursively
 while IFS= read -r -d '' git_dir; do
@@ -139,7 +145,9 @@ echo -e "${PURPLE}$ORIGINAL_BRANCH${NC}"
 echo "-----------------"
 echo "-----------------"
 # Run branch_management.py
-echo -e "${PURPLE}Running branch_management.py...${NC}"
-python3 /Users/niman/Devs_and_ML/Code_Maintenance/branch_management.py
-echo "-----------------"
-echo "-----------------"
+if [ "$REPO_ROOT" == "/Users/niman/Desktop/Pad/Work/Trajekt/ArcMachine" ]; then
+    echo -e "${PURPLE}Running branch_management.py...${NC}"
+    python3 /Users/niman/Devs_and_ML/Code_Maintenance/branch_management.py
+    echo "-----------------"
+    echo "-----------------"
+fi
