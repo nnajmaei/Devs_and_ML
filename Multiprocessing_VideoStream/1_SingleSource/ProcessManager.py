@@ -1,10 +1,14 @@
-import cv2
 import multiprocessing
 import os
 
+import cv2
 from Broadcaster import VideoBroadcaster
-from Processes import VideoDisplayProcess, FaceDetectionProcess
-from Processes import TextDetectionProcess, DownsampleProcess
+from Processes import (
+    DownsampleProcess,
+    FaceDetectionProcess,
+    TextDetectionProcess,
+    VideoDisplayProcess,
+)
 
 
 class MultiProcessor:

@@ -1,7 +1,8 @@
-import cv2
 import multiprocessing
-import numpy as np
 import time
+
+import cv2
+import numpy as np
 
 
 class ConsumerProcess(multiprocessing.Process):

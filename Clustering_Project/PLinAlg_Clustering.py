@@ -1,5 +1,5 @@
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 
 v1 = np.array([2, 5, 1])
 v2 = np.array([0, 2, 2])

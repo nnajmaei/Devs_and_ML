@@ -1,6 +1,7 @@
-import cv2
 import multiprocessing
 import os
+
+import cv2
 from Broadcaster import VideoBroadcaster
 from Processors import Client
 

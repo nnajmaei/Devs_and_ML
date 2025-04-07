@@ -1,8 +1,9 @@
 # import pygame
 import math
+import random
+
 import matplotlib.pyplot as plt
 from matplotlib.patches import Circle
-import random
 
 # ===========================================================
 

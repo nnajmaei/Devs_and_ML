@@ -1,7 +1,8 @@
-import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.patches import Circle
 import random
+
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.patches import Circle
 
 
 # ===========================================================

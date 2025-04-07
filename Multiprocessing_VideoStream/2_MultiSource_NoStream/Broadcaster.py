@@ -1,6 +1,7 @@
-import cv2
 import multiprocessing
 import time
+
+import cv2
 
 
 class VideoBroadcaster:
