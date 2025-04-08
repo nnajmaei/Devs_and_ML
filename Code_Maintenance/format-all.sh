@@ -10,6 +10,9 @@ NC='\033[0m' # No Color
 
 # Default directory
 DEFAULT_DIR="$(pwd)"
+DEFAULT_DIR_LOWER=$(echo "$DEFAULT_DIR" | tr '[:upper:]' '[:lower:]')
+AM_REPO="/Users/niman/Desktop/Pad/Work/Trajekt/ArcMachine"
+AM_REPO_LOWER=$(echo "$AM_REPO" | tr '[:upper:]' '[:lower:]')
 echo "--------------------------------------------------------------------------------"
 echo -e "${BLUE}Starting format-all.sh script...${NC}"
 echo " "
@@ -100,7 +103,7 @@ echo "--------------------------------------------------------------------------
 # Check if task 1 is selected
 if [[ " ${tasks_to_run[*]} " =~ " 1 " ]]; then
     echo -e "${DARK_BLUE}1- Removing unused imports using Autoflake...${NC}"
-    if [ "$REPO_ROOT" == "/Users/niman/Desktop/Pad/Work/Trajekt/ArcMachine" ]; then
+    if [[ "$DEFAULT_DIR_LOWER" == "$AM_REPO_LOWER" ]]; then
         autoflake --remove-all-unused-imports --ignore-pass-after-docstring --recursive --in-place ./ArcPyUtils ./notebooks  ./core_utils ./notebooks-updated  ./daemons ./event_id_mgmt ./firmware ./machine-configs ./manufacturing_notebooks ./notebooks-updated ./TrajektBallDetection ./TrajektStereoVision ./arc.py ./mock_arc.py ./MockAMPMotor  >/dev/null 2>&1
     else
         autoflake --remove-all-unused-imports --ignore-pass-after-docstring --recursive --in-place .
@@ -126,7 +129,7 @@ if [[ " ${tasks_to_run[*]} " =~ " 2 " ]]; then
     full_paths=("${isort_directories[@]/#/$DEFAULT_DIR}")
     full_paths+=("$DEFAULT_DIR/arc.py")
     full_paths+=("$DEFAULT_DIR/mock_arc.py")
-    if [ "$REPO_ROOT" == "/Users/niman/Desktop/Pad/Work/Trajekt/ArcMachine" ]; then
+    if [[ "$DEFAULT_DIR_LOWER" == "$AM_REPO_LOWER" ]]; then
         isort "${full_paths[@]}" >/dev/null 2>&1
     else
         isort . >/dev/null 2>&1
@@ -182,7 +185,7 @@ if [[ " ${tasks_to_run[*]} " =~ " 4 " ]]; then
 fi
 
 # Check if task 5 is selected
-if [[ " ${tasks_to_run[*]} " =~ " 5 " ]] && [ "$REPO_ROOT" == "/Users/niman/Desktop/Pad/Work/Trajekt/ArcMachine" ]; then
+if [[ " ${tasks_to_run[*]} " =~ " 5 " ]] && [[ "$DEFAULT_DIR_LOWER" == "$AM_REPO_LOWER" ]]; then
     echo -e "${DARK_BLUE}5- Clearing Jupyter notebook outputs...${NC}"
     python /Users/niman/Devs_and_ML/Code_Maintenance/clear_notebook_outputs.py  >/dev/null 2>&1
     echo " "
@@ -200,7 +203,7 @@ if [[ " ${tasks_to_run[*]} " =~ " 5 " ]] && [ "$REPO_ROOT" == "/Users/niman/Desk
 fi
 
 # Check if task 6 is selected (now updating Jupyter notebook kernels)
-if [[ " ${tasks_to_run[*]} " =~ " 6 " ]] && [ "$REPO_ROOT" == "/Users/niman/Desktop/Pad/Work/Trajekt/ArcMachine" ]; then
+if [[ " ${tasks_to_run[*]} " =~ " 6 " ]] && [[ "$DEFAULT_DIR_LOWER" == "$AM_REPO_LOWER" ]]; then
     echo -e "${DARK_BLUE}6- Updating Jupyter notebook kernels...${NC}"
 
     # Call the external Python script to update kernels
@@ -221,14 +224,14 @@ if [[ " ${tasks_to_run[*]} " =~ " 6 " ]] && [ "$REPO_ROOT" == "/Users/niman/Desk
 fi
 
 # Check if task 7 is selected (Checking for 'daemons' imports in ArcPyUtils)
-if [[ " ${tasks_to_run[*]} " =~ " 7 " ]] && [ "$REPO_ROOT" == "/Users/niman/Desktop/Pad/Work/Trajekt/ArcMachine" ]; then
+if [[ " ${tasks_to_run[*]} " =~ " 7 " ]] && [[ "$DEFAULT_DIR_LOWER" == "$AM_REPO_LOWER" ]]; then
     echo -e "${DARK_BLUE}7- Checking for 'daemons' imports in ArcPyUtils...${NC}"
     python3 /Users/niman/Devs_and_ML/Code_Maintenance/check_daemon_imports.py
     echo "--------------------------------------------------------------------------------"
 fi
 
 # Check if task 8 is selected (Reporting EventIDs missing .value)
-if [[ " ${tasks_to_run[*]} " =~ " 8 " ]] && [ "$REPO_ROOT" == "/Users/niman/Desktop/Pad/Work/Trajekt/ArcMachine" ]; then
+if [[ " ${tasks_to_run[*]} " =~ " 8 " ]] && [[ "$DEFAULT_DIR_LOWER" == "$AM_REPO_LOWER" ]]; then
     echo -e "${DARK_BLUE}8- Reporting EventIDs with .value...${NC}"
     python3 /Users/niman/Devs_and_ML/Code_Maintenance/check_event_ids.py
     echo "--------------------------------------------------------------------------------"
