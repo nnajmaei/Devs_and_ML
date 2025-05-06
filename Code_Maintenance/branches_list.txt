@@ -1,9 +1,9 @@
-2025-04-14 13:42:51 -0400 - origin/deploy/main
-2025-04-14 17:44:34 +0000 - origin/deploy/beta
-2025-04-23 10:11:08 -0400 - origin/deploy/staging
-2025-04-23 10:11:08 -0400 - origin/deploy/dev
-2025-04-23 09:34:42 -0400 - origin/dev/feat/error_msging_enhancement
-2025-04-23 09:34:35 -0400 - origin/dev/feat/amp_pos_controller_improvements
-2025-04-23 09:33:21 -0400 - origin/dev/feat/update_pitch_recap_2
+2025-05-05 13:32:33 -0400 - origin/deploy/main
+2025-05-05 17:33:55 +0000 - origin/deploy/beta
+2025-05-05 13:38:13 -0400 - origin/deploy/staging
+2025-05-05 13:38:13 -0400 - origin/deploy/dev
+2025-05-05 13:17:01 -0400 - origin/dev/feat/daemon-error-handling-handover
+2025-05-05 12:51:46 -0400 - origin/dev/imp/stereo2world-calibration
+2025-05-03 16:21:36 -0400 - origin/dev/feat/update_pitch_recap_2
 2025-04-10 13:49:51 -0400 - origin/dev/feat/new-gimbal-daemon
-2025-02-25 10:16:13 -0500 - origin/dev/feat/hit_detection
+2025-02-25 10:16:13 -0500 - origin/dev/feat/hit_detection ****
