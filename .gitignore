@@ -7,3 +7,4 @@ Multiprocessing_VideoStream/.DS_Store
 .DS_Store
 /Code_Maintenance/branches_list.txt
 branches_list.txt
+code_gen.py
