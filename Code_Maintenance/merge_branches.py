@@ -117,10 +117,12 @@ def main():
         print("=" * 50)
 
         # Determine the correct branch to merge from
-        if branch == "dev/imp/websocket_refactoring_and_pylint_audit":
+        if branch == "dev/patch/data_collector_ng_daemon":
             continue
         if branch == "deploy/dev":
             merge_from = "origin/deploy/staging"
+        elif branch == "patch/refactor-data-collector":
+            merge_from = "origin/deploy/dev"
         elif branch == "main/patch/bi-lights-bugs":
             merge_from = "origin/deploy/dev"
         elif branch == "deploy/staging":
