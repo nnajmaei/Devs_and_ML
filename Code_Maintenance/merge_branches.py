@@ -117,7 +117,7 @@ def main():
         print("=" * 50)
 
         # Determine the correct branch to merge from
-        if branch == "dev/patch/data_collector_ng_daemon":
+        if "dev/patch/data_collector_ng" in branch:
             continue
         if branch == "deploy/dev":
             merge_from = "origin/deploy/staging"
