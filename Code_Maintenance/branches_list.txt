@@ -1,14 +1,12 @@
-2025-07-18 19:06:57 -0400 - origin/deploy/main
-2025-07-18 23:07:06 +0000 - origin/deploy/beta
-2025-07-21 12:38:26 -0400 - origin/deploy/staging
-2025-07-21 16:38:44 +0000 - origin/deploy/dev
-2025-07-21 12:22:02 -0400 - origin/dev/patch/data_collector_ng_daemon
-2025-07-21 12:03:20 -0400 - origin/dev/feat/projector_preview_enhancements
-2025-07-21 11:35:22 -0400 - origin/dev/feat/vision-lift-test
-2025-07-21 11:35:07 -0400 - origin/dev/feat/pc-benchmarking
-2025-07-21 11:34:55 -0400 - origin/dev/feat/bi_log_tools
-2025-07-21 11:34:34 -0400 - origin/dev/feat/amp_library
-2025-07-21 11:34:03 -0400 - origin/dev/imp/type-hinting
-2025-07-18 22:57:28 -0400 - origin/main/patch/mock-rapsodo-break-confidence
-2025-04-10 13:49:51 -0400 - origin/dev/feat/new-gimbal-daemon ****
-2025-02-25 10:16:13 -0500 - origin/dev/feat/hit_detection ****
+2025-08-08 09:03:50 -0400 - origin/deploy/main
+2025-08-19 12:53:05 -0400 - origin/deploy/beta
+2025-08-20 08:26:29 -0400 - origin/deploy/staging
+2025-08-20 08:29:55 -0400 - origin/deploy/dev
+2025-08-19 18:19:51 -0400 - origin/dev/feat/hawkeye_consumer
+2025-08-19 16:13:11 -0400 - origin/dev/imp/python-3.13.5
+2025-08-19 16:13:00 -0400 - origin/dev/imp/logging-improvements-v2
+2025-08-19 16:12:48 -0400 - origin/dev/feat/wheel_tuning
+2025-08-19 16:12:34 -0400 - origin/dev/feat/vision-focus-analysis-notebook
+2025-08-19 16:12:17 -0400 - origin/dev/feat/projector_preview_enhancements
+2025-08-19 16:12:03 -0400 - origin/dev/feat/fly_aug7_updates
+2025-08-19 16:11:53 -0400 - origin/dev/feat/ats_notebooks_aug2025

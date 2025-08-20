@@ -117,30 +117,43 @@ def main():
         print("=" * 50)
 
         # Determine the correct branch to merge from
-        if "dev/patch/data_collector_ng" in branch:
-            continue
-        if branch == "deploy/dev":
-            merge_from = "origin/deploy/staging"
-        elif branch == "patch/refactor-data-collector":
-            merge_from = "origin/deploy/dev"
-        elif branch == "main/patch/bi-lights-bugs":
-            merge_from = "origin/deploy/dev"
-        elif branch == "deploy/staging":
-            merge_from = "origin/deploy/beta"
-        elif branch == "deploy/beta":
-            merge_from = "origin/deploy/main"
-        elif branch.startswith("dev/"):
-            merge_from = "origin/deploy/dev"
-        elif branch.startswith("staging/"):
-            merge_from = "origin/deploy/staging"
-        elif branch.startswith("beta/"):
-            merge_from = "origin/deploy/beta"
-        elif branch.startswith("main/"):
-            merge_from = "origin/deploy/main"
-        elif branch.startswith("release/"):
-            merge_from = "origin/deploy/staging"
+        maintenance_required_branches = [
+            "deploy/dev",
+            "deploy/staging",
+            "deploy/beta",
+            "dev/feat/projector_preview_enhancements",
+            "dev/imp/python-3.13.5",
+        ]
+        if branch in maintenance_required_branches:
+            if branch == "deploy/dev":
+                merge_from = "origin/deploy/staging"
+            elif branch == "patch/refactor-data-collector":
+                merge_from = "origin/deploy/dev"
+            elif branch == "main/patch/bi-lights-bugs":
+                merge_from = "origin/deploy/dev"
+            elif branch == "deploy/staging":
+                merge_from = "origin/deploy/beta"
+            elif branch == "deploy/beta":
+                merge_from = "origin/deploy/main"
+            elif branch.startswith("dev/"):
+                merge_from = "origin/deploy/dev"
+            elif branch.startswith("staging/"):
+                merge_from = "origin/deploy/staging"
+            elif branch.startswith("beta/"):
+                merge_from = "origin/deploy/beta"
+            elif branch.startswith("main/"):
+                merge_from = "origin/deploy/main"
+            elif branch.startswith("release/"):
+                merge_from = "origin/deploy/staging"
+            else:
+                print(RED + f"Unsupported branch pattern.\nSkipping..." + RESET)
+                continue
         else:
-            print(RED + f"Unsupported branch pattern.\nSkipping..." + RESET)
+            print(
+                YELLOW
+                + f"No maintenance required for this branch.\nSkipping..."
+                + RESET
+            )
             continue
 
         # Check if a merge is needed
