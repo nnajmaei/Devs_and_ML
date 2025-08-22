@@ -123,6 +123,7 @@ def main():
             "deploy/beta",
             "dev/feat/projector_preview_enhancements",
             "dev/imp/python-3.13.5",
+            "dev/feat/fly_aug7_updates",
         ]
         if branch in maintenance_required_branches:
             if branch == "deploy/dev":
