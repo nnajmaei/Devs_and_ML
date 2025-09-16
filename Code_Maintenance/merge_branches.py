@@ -124,6 +124,7 @@ def main():
             "dev/feat/projector_preview_enhancements",
             "dev/imp/python-3.13.5",
             "dev/feat/fly_aug7_updates",
+            "dev/feat/auto_drop_ball",
         ]
         if branch in maintenance_required_branches:
             if branch == "deploy/dev":
