@@ -28,7 +28,7 @@ def get_current_branch(repo_path):
         ["git", "rev-parse", "--abbrev-ref", "HEAD"], repo_path
     )
     if returncode == 0:
-        return stdout
+        return stdout.strip()  # strip newline and spaces
     else:
         print(RED + f"Error retrieving current branch: {stderr}" + RESET)
         sys.exit(1)
@@ -209,11 +209,16 @@ def main():
             if not handle_merge_error():
                 continue
 
-    # Switch back to original branch
+    # Switch back to original branch and pull recursively
     print(CYAN + f"Switching back to original branch: {original_branch}" + RESET)
     _, stderr, returncode = run_git_command(
         ["git", "checkout", original_branch], repo_path
     )
+    if returncode != 0:
+        print(RED + f"Error switching back to original branch: {stderr}" + RESET)
+    else:
+        # Ensure original branch is also up to date
+        pull_recursively(repo_path)
 
 
 if __name__ == "__main__":
