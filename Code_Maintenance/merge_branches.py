@@ -121,13 +121,9 @@ def main():
             "deploy/dev",
             "deploy/staging",
             "deploy/beta",
-            "dev/feat/projector_preview_enhancements",
             "dev/imp/python-3.13.5",
-            "dev/feat/fly_aug7_updates",
-            "dev/feat/auto_drop_ball",
-            "dev/patch/error-report-flow-improvement",
-            "main/imp/bi-less-reset-states",
-            "dev/feat/new_hopper_algo_sep2025",
+            "main/patch/new-projector-not-beeping",
+            "main/patch/hit-detection-config",
         ]
         if branch in maintenance_required_branches:
             if branch == "deploy/dev":

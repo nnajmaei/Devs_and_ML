@@ -49,6 +49,30 @@ while IFS= read -r -d '' git_dir; do
     # Store the current branch
     CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
     
+    # NEW: Ensure all remote branches (on origin) have local copies
+    while IFS= read -r remote_branch; do
+        # Trim leading spaces from remote branch names
+        # and skip symbolic refs like "origin/HEAD -> origin/main"
+        if [[ "$remote_branch" == *"->"* ]]; then
+            continue
+        fi
+        
+        # Only consider origin/* branches
+        case "$remote_branch" in
+            origin/*)
+                local_branch="${remote_branch#origin/}"
+                # If the local branch doesn't exist, create it tracking the remote
+                if ! git show-ref --verify --quiet "refs/heads/$local_branch"; then
+                    git checkout -b "$local_branch" --track "$remote_branch"
+                    git checkout "$CURRENT_BRANCH"
+                fi
+                ;;
+            *)
+                continue
+                ;;
+        esac
+    done < <(git branch -r | sed 's/^ *//')
+    
     # Check if there are any branches in the repository
     branch_count=$(git branch --list | wc -l)
     if [ "$branch_count" -gt 0 ]; then
