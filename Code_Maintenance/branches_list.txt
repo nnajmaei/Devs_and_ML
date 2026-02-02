@@ -1,30 +1,40 @@
-2025-11-14 14:22:59 -0500 - origin/deploy/main
-2025-11-14 19:23:16 +0000 - origin/deploy/beta
-2025-11-25 15:46:28 -0500 - origin/deploy/staging
-2025-11-25 15:46:28 -0500 - origin/deploy/dev
-2025-11-25 15:47:24 -0500 - origin/dev/patch/cleanup_dependencies
-2025-11-25 15:46:49 -0500 - origin/staging/patch/fix-bf-target-encoder-drift
-2025-11-25 15:27:33 -0500 - origin/feat/vision_perf_pipeline
-2025-11-25 15:12:08 -0500 - origin/dev/patch/raw_video_improv
-2025-11-25 12:58:20 -0500 - origin/dev/feat/hit-detection-v3
-2025-11-25 12:25:28 -0500 - origin/staging/patch/concurrent_uploads
-2025-11-25 11:32:45 -0500 - origin/dev/imp/python-3.13.5
-2025-11-24 23:52:51 -0500 - origin/dev/imp/projector_audio_refactor
-2025-11-24 20:03:00 -0500 - origin/dev/feat/spin-eval-implementation
-2025-11-24 16:32:15 -0500 - origin/dev/feat/hit-detection-runtime-improvement
-2025-11-24 09:59:27 -0500 - origin/dev/feat/hit-summary-in-video-playback
-2025-11-23 22:31:57 -0500 - origin/dev/feat/spin-video-collection
-2025-11-22 02:26:41 -0500 - origin/dev/feat/pop-investigation
-2025-11-21 17:54:17 -0500 - origin/hackathon/3d_engine
-2025-11-19 15:06:59 -0500 - origin/hackathon/auto-swing-detection
-2025-11-18 12:14:33 -0500 - origin/hackathon/bat-tracking
-2025-11-14 14:30:11 -0500 - origin/main/patch/hit-detection-config
-2025-11-14 14:29:55 -0500 - origin/main/patch/new-projector-not-beeping
-2025-11-11 17:05:56 -0500 - origin/dev/imp/move-orientations-to-core
-2025-11-05 16:35:57 -0500 - origin/dev/feat/wait-for-stereo-on-bp
-2025-10-29 16:01:33 -0400 - origin/dev/feat/hit-detection-config
-2025-10-10 10:33:39 -0400 - origin/dev/feat/fly_aug7_updates
-2025-10-08 15:27:05 -0400 - origin/dev/imp/mog-after-compression
-2025-09-29 09:00:34 -0400 - origin/dev/patch/pull_dev_videos
-2025-09-29 08:58:53 -0400 - origin/dev/feat/hit-dataset-generation
-2025-09-29 08:57:34 -0400 - origin/dev/feat/auto-swing-detection
+2026-01-30 14:04:28 -0500 - origin/deploy/main
+2026-01-30 14:31:52 -0500 - origin/deploy/beta
+2026-01-30 14:31:52 -0500 - origin/deploy/staging
+2026-01-30 17:44:02 -0500 - origin/deploy/dev
+2026-01-30 17:44:18 -0500 - origin/dev/dep/limit-persisted-errors-to-vention-pos
+2026-01-30 17:28:03 -0500 - origin/dev/improv/store_plate_localization
+2026-01-30 16:50:09 -0500 - origin/dev/feat/monitor_ambient_temp
+2026-01-30 13:30:06 -0500 - origin/dev/feat/bi-config-reduction
+2026-01-30 12:49:22 -0500 - origin/dev/feat/update-cal-procedure-field-board
+2026-01-29 23:34:56 -0500 - origin/dev/feat/process_frames_earlier
+2026-01-29 18:05:04 -0500 - origin/dev/feat/streaming_cameras
+2026-01-28 14:57:28 -0500 - origin/dev/feat/calibration-verification
+2026-01-28 17:58:53 +0000 - origin/staging/feat/time_between_pitches_investigation
+2026-01-28 10:46:21 -0500 - origin/dev/feat/hit-annotation-parsing
+2026-01-27 12:26:19 -0500 - origin/dev/feat/try_tach
+2026-01-26 18:52:51 -0500 - origin/main/feat/reacreate-scheduled-uploads-pkl
+2026-01-26 18:20:18 -0500 - origin/dev/feat/recreate-shceduled-uploads
+2026-01-26 17:28:44 -0500 - origin/dev/fix/dynamic_cropping
+2026-01-21 15:07:33 -0500 - origin/dev/feat/pitch-mog-optimization
+2026-01-21 14:44:04 -0500 - origin/dev/feat/swing-evaluation
+2026-01-21 14:04:27 -0500 - origin/dev/improv/reduce_ball_presence_polling
+2026-01-21 11:51:03 -0500 - origin/dev/feat/ffc-120-fps
+2026-01-20 17:56:58 -0500 - origin/dev/feat/pitch_jitter
+2026-01-20 17:56:34 -0500 - origin/dev/feat/vision-confidence-checks
+2026-01-14 10:40:48 -0500 - origin/dev/feat/hit-detection-mog-improvments
+2026-01-09 08:33:44 -0500 - origin/dev/patch/use_coreutils_mongo_s3_utils
+2026-01-09 08:07:52 -0500 - origin/dev/use_new_vision_collections
+2026-01-05 10:36:50 -0500 - origin/dev/SwingLSTM
+2025-12-15 19:05:01 -0500 - origin/dev/feat/parse_annotation_xml
+2025-12-11 14:50:18 -0500 - origin/dev/feat/confidence_metric_analysis
+2025-12-08 11:24:03 -0500 - origin/dev/swing_detection
+2025-11-28 10:48:31 -0500 - origin/dev/imp/python-3.13.5 ****
+2025-11-24 16:32:15 -0500 - origin/dev/feat/hit-detection-runtime-improvement ****
+2025-11-24 09:59:27 -0500 - origin/dev/feat/hit-summary-in-video-playback ****
+2025-11-11 17:05:56 -0500 - origin/dev/imp/move-orientations-to-core ****
+2025-11-05 16:35:57 -0500 - origin/dev/feat/wait-for-stereo-on-bp ****
+2025-10-08 15:27:05 -0400 - origin/dev/imp/mog-after-compression ****
+2025-09-29 09:00:34 -0400 - origin/dev/patch/pull_dev_videos ****
+2025-09-29 08:58:53 -0400 - origin/dev/feat/hit-dataset-generation ****
+2025-09-29 08:57:34 -0400 - origin/dev/feat/auto-swing-detection ****

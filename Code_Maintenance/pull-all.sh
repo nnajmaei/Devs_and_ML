@@ -175,3 +175,6 @@ if [ "$REPO_ROOT" == "/Users/niman/Desktop/Pad/Work/Trajekt/ArcMachine" ]; then
     echo "-----------------"
     echo "-----------------"
 fi
+# Cleanup and stash changes
+rm -r core_utils/
+git stash
