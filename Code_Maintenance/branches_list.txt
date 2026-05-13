@@ -1,40 +1,74 @@
-2026-01-30 14:04:28 -0500 - origin/deploy/main
-2026-01-30 14:31:52 -0500 - origin/deploy/beta
-2026-01-30 14:31:52 -0500 - origin/deploy/staging
-2026-01-30 17:44:02 -0500 - origin/deploy/dev
-2026-01-30 17:44:18 -0500 - origin/dev/dep/limit-persisted-errors-to-vention-pos
-2026-01-30 17:28:03 -0500 - origin/dev/improv/store_plate_localization
-2026-01-30 16:50:09 -0500 - origin/dev/feat/monitor_ambient_temp
-2026-01-30 13:30:06 -0500 - origin/dev/feat/bi-config-reduction
-2026-01-30 12:49:22 -0500 - origin/dev/feat/update-cal-procedure-field-board
-2026-01-29 23:34:56 -0500 - origin/dev/feat/process_frames_earlier
-2026-01-29 18:05:04 -0500 - origin/dev/feat/streaming_cameras
-2026-01-28 14:57:28 -0500 - origin/dev/feat/calibration-verification
-2026-01-28 17:58:53 +0000 - origin/staging/feat/time_between_pitches_investigation
-2026-01-28 10:46:21 -0500 - origin/dev/feat/hit-annotation-parsing
-2026-01-27 12:26:19 -0500 - origin/dev/feat/try_tach
-2026-01-26 18:52:51 -0500 - origin/main/feat/reacreate-scheduled-uploads-pkl
-2026-01-26 18:20:18 -0500 - origin/dev/feat/recreate-shceduled-uploads
-2026-01-26 17:28:44 -0500 - origin/dev/fix/dynamic_cropping
-2026-01-21 15:07:33 -0500 - origin/dev/feat/pitch-mog-optimization
-2026-01-21 14:44:04 -0500 - origin/dev/feat/swing-evaluation
-2026-01-21 14:04:27 -0500 - origin/dev/improv/reduce_ball_presence_polling
-2026-01-21 11:51:03 -0500 - origin/dev/feat/ffc-120-fps
-2026-01-20 17:56:58 -0500 - origin/dev/feat/pitch_jitter
-2026-01-20 17:56:34 -0500 - origin/dev/feat/vision-confidence-checks
-2026-01-14 10:40:48 -0500 - origin/dev/feat/hit-detection-mog-improvments
-2026-01-09 08:33:44 -0500 - origin/dev/patch/use_coreutils_mongo_s3_utils
-2026-01-09 08:07:52 -0500 - origin/dev/use_new_vision_collections
-2026-01-05 10:36:50 -0500 - origin/dev/SwingLSTM
-2025-12-15 19:05:01 -0500 - origin/dev/feat/parse_annotation_xml
-2025-12-11 14:50:18 -0500 - origin/dev/feat/confidence_metric_analysis
-2025-12-08 11:24:03 -0500 - origin/dev/swing_detection
-2025-11-28 10:48:31 -0500 - origin/dev/imp/python-3.13.5 ****
+2026-05-13 13:50:11 -0400 - origin/deploy/main
+2026-05-13 13:50:11 -0400 - origin/deploy/beta
+2026-05-13 13:50:11 -0400 - origin/deploy/staging
+2026-05-13 19:13:47 +0000 - origin/deploy/dev
+2026-05-13 15:35:33 -0400 - origin/dev/investigation/cal_validation
+2026-05-13 14:27:53 -0400 - origin/main/patch/use-bi-circle-configs
+2026-05-13 14:36:09 -0300 - origin/dev/feat/replay_video
+2026-05-13 13:14:20 -0400 - origin/dev/feat/opentelemetry_integration
+2026-05-13 12:00:56 -0400 - origin/deploy/rollback
+2026-05-13 11:44:53 -0400 - origin/dev/feat/systeminfo_in_mongo
+2026-05-12 20:23:41 -0400 - origin/dev/feat/integrate-cnn-v2
+2026-05-12 16:57:22 -0400 - origin/dev/imp/log_files_in_UTC
+2026-05-12 14:17:21 -0400 - origin/main/patch/fix_calib_serialization
+2026-05-12 11:41:06 -0400 - origin/dev/feat/amp_balance_error_id
+2026-05-11 17:44:28 -0300 - origin/dev/feat/link-bi-timeout-images-to-fire-id
+2026-05-07 14:52:11 -0400 - origin/dev/feat/integrate-vision-cnn
+2026-05-07 10:38:20 -0400 - origin/origin/dev/feat/Python312-2
+2026-05-07 09:26:02 -0400 - origin/dev/feat/Python312-missed-files
+2026-05-06 19:27:36 +0000 - origin/upgrade/coreutils-v2.0.0
+2026-05-06 13:54:43 -0400 - origin/dev/internal-tool/cvat-s3-automation
+2026-05-06 10:58:40 -0400 - origin/dev/feat/Python312
+2026-05-05 14:09:10 -0400 - origin/dev/feat/vision-cnn-integration
+2026-05-04 10:35:43 -0400 - origin/dev/feat/vision-ball-detection-cnn
+2026-05-01 17:59:24 -0300 - origin/dev/investigation/bi-profiling-analysis
+2026-04-29 23:00:50 -0400 - origin/staging/patch/fix_spin_upload
+2026-04-30 01:40:42 +0000 - origin/dev/fix-empty-carousel-staging-3c06
+2026-04-30 01:40:42 +0000 - origin/stagin/fix-empty-carousel-uploads-3c06
+2026-04-30 01:39:18 +0000 - origin/dev/fix-empty-carousel-uploads-3c06
+2026-04-29 14:31:27 -0400 - origin/staging/feat/amp_z_guardrails_addons
+2026-04-28 21:26:23 -0400 - origin/dev/improv/fleet_report_improvements
+2026-04-28 15:36:35 -0400 - origin/main/feat/socketio-poc
+2026-04-28 12:49:40 -0400 - origin/dev/feat/pitch_tracking_analysis
+2026-04-27 16:22:52 -0400 - origin/staging/patch/lc_estop
+2026-04-24 17:23:21 -0400 - origin/dev/investigation/cal-robustness
+2026-04-24 16:02:46 -0400 - origin/dev/imp/parallel_unit_tests
+2026-04-24 12:58:35 -0400 - origin/dev/imp/projector_realtime
+2026-04-22 16:58:03 -0400 - origin/dev/imp/optomize_unit_tests
+2026-04-21 10:49:30 -0400 - origin/dev/temp/enable-raised-calibration
+2026-04-17 16:41:46 -0400 - origin/dev/feat/Python314
+2026-04-16 22:16:33 -0400 - origin/dev/feat/open_telemetry
+2026-04-14 12:05:52 -0400 - origin/dev/feat/swing-evaluation
+2026-04-08 16:58:44 -0400 - origin/main/patch/fix-camera-fat-cells
+2026-04-02 01:47:21 -0400 - origin/dev/feat/streaming_cameras
+2026-03-19 15:12:27 -0400 - origin/dev/feat/get-chessboard-rotation
+2026-03-18 14:35:30 -0400 - origin/dev/imp/upgrade-needed-indicator
+2026-03-17 19:22:15 -0400 - origin/dev/feat/get-chessboard-rotation-alternative
+2026-03-12 15:27:39 -0300 - origin/dev/feat/try_tach ****
+2026-03-11 16:11:28 -0700 - origin/dev/feat/merge-amp-mock ****
+2026-03-04 11:48:00 -0500 - origin/dev/feat/solve-rotation-from-plate-distance ****
+2026-02-25 15:49:02 -0500 - origin/dev/feat/bi-config-reduction ****
+2026-02-11 14:12:16 -0500 - origin/dev/feat/upload-traj-video-on-failed-detection ****
+2026-02-09 13:15:34 -0500 - origin/dev/feat/compare-same-shots-over-time ****
+2026-01-29 23:34:56 -0500 - origin/dev/feat/process_frames_earlier ****
+2026-01-28 10:46:21 -0500 - origin/dev/feat/hit-annotation-parsing ****
+2026-01-26 17:28:44 -0500 - origin/dev/fix/dynamic_cropping ****
+2026-01-21 15:07:33 -0500 - origin/dev/feat/pitch-mog-optimization ****
+2026-01-21 14:04:27 -0500 - origin/dev/improv/reduce_ball_presence_polling ****
+2026-01-21 11:51:03 -0500 - origin/dev/feat/ffc-120-fps ****
+2026-01-20 17:56:34 -0500 - origin/dev/feat/vision-confidence-checks ****
+2026-01-14 10:40:48 -0500 - origin/dev/feat/hit-detection-mog-improvments ****
+2026-01-09 08:33:44 -0500 - origin/dev/patch/use_coreutils_mongo_s3_utils ****
+2026-01-09 08:07:52 -0500 - origin/dev/use_new_vision_collections ****
+2026-01-05 10:36:50 -0500 - origin/dev/SwingLSTM ****
+2025-12-15 19:05:01 -0500 - origin/dev/feat/parse_annotation_xml ****
+2025-12-11 14:50:18 -0500 - origin/dev/feat/confidence_metric_analysis ****
+2025-12-08 11:24:03 -0500 - origin/dev/swing_detection ****
 2025-11-24 16:32:15 -0500 - origin/dev/feat/hit-detection-runtime-improvement ****
 2025-11-24 09:59:27 -0500 - origin/dev/feat/hit-summary-in-video-playback ****
 2025-11-11 17:05:56 -0500 - origin/dev/imp/move-orientations-to-core ****
 2025-11-05 16:35:57 -0500 - origin/dev/feat/wait-for-stereo-on-bp ****
-2025-10-08 15:27:05 -0400 - origin/dev/imp/mog-after-compression ****
+2025-10-10 10:33:39 -0400 - origin/dev/feat/fly_aug7_updates ****
 2025-09-29 09:00:34 -0400 - origin/dev/patch/pull_dev_videos ****
 2025-09-29 08:58:53 -0400 - origin/dev/feat/hit-dataset-generation ****
 2025-09-29 08:57:34 -0400 - origin/dev/feat/auto-swing-detection ****

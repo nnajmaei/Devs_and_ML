@@ -20,8 +20,20 @@ FAILED_BRANCHES=()
 NO_CHANGES_BRANCHES=()
 DELETED_BRANCHES_LIST=()
 
+# Branches that should be actively pulled.
+should_pull_branch() {
+    case "$1" in
+        deploy/main|deploy/staging|deploy/beta|deploy/dev|deploy/rollback)
+            return 0
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+}
+
 # Save current directory (the one the script was *called* from)
-REPO_ROOT="$(pwd)"
+REPO_ROOT="$(pwd -P)"
 
 # Ensure we’re inside a git repo
 if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
@@ -42,7 +54,11 @@ trap 'cd "$REPO_ROOT" && git checkout "$ORIGINAL_BRANCH"' EXIT
 # Find all git repositories recursively
 while IFS= read -r -d '' git_dir; do
     # Navigate to the parent directory of the .git directory
-    repo_dir="$(dirname "$git_dir")"
+    repo_dir="$(cd "$(dirname "$git_dir")" && pwd -P)"
+    # Only operate on the repo where the script was invoked.
+    if [ "$repo_dir" != "$REPO_ROOT" ]; then
+        continue
+    fi
     # Navigate into the repository directory
     cd "$repo_dir" || continue
     
@@ -83,16 +99,15 @@ while IFS= read -r -d '' git_dir; do
                 echo -e "${YELLOW}Skipping branch: $branch${NC}"
                 continue
             fi
-            
-            echo "-----------------"
-            echo "Pulling from branch $branch"
-            git checkout "$branch"
-            
+
             # Check if the branch exists on the remote
             if ! git ls-remote --exit-code origin "$branch" > /dev/null 2>&1; then
                 echo "Branch '$branch' no longer exists on remote. Deleting local branch..."
                 # Switch to a different branch before deleting
-                git checkout "$ORIGINAL_BRANCH"
+                active_branch=$(git rev-parse --abbrev-ref HEAD)
+                if [ "$active_branch" == "$branch" ]; then
+                    git checkout "$ORIGINAL_BRANCH" > /dev/null 2>&1 || continue
+                fi
                 # Delete the local branch
                 git branch -D "$branch"
                 ((DELETED_BRANCHES++))
@@ -100,7 +115,16 @@ while IFS= read -r -d '' git_dir; do
                 DELETED_BRANCHES_LIST+=("$branch")
                 continue
             fi
-            
+
+            # Only pull the target deploy branches; skip pull for all others.
+            if ! should_pull_branch "$branch"; then
+                continue
+            fi
+
+            echo "-----------------"
+            echo "Pulling from branch $branch"
+            git checkout "$branch"
+
             # Pull changes from the branch
             if pull_output=$(git pull --recurse-submodules); then
                 if [[ $pull_output == *"Already up to date."* ]]; then
@@ -127,6 +151,7 @@ while IFS= read -r -d '' git_dir; do
 
 done < <(find . -type d -name ".git" -print0)
 
+cd "$REPO_ROOT" || exit 1
 git pull --recurse-submodules
 
 # Print summary report
@@ -176,5 +201,5 @@ if [ "$REPO_ROOT" == "/Users/niman/Desktop/Pad/Work/Trajekt/ArcMachine" ]; then
     echo "-----------------"
 fi
 # Cleanup and stash changes
-rm -r core_utils/
+rm -rf "$REPO_ROOT/core_utils"
 git stash
