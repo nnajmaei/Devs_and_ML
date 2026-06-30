@@ -66,6 +66,7 @@ ASSIGNEES_TO_PULL=(
     "justinmende"
 )
 ASSIGNEE_CHECK_AVAILABLE=1
+BRANCH_PULL_ASSIGNEES=""
 if ! command -v gh > /dev/null 2>&1; then
     ASSIGNEE_CHECK_AVAILABLE=0
     echo -e "${YELLOW}Warning: gh CLI not found. Only deploy branches will be pulled.${NC}"
@@ -74,26 +75,59 @@ elif ! gh auth status > /dev/null 2>&1; then
     echo -e "${YELLOW}Warning: gh CLI is not authenticated. Only deploy branches will be pulled.${NC}"
 fi
 
+assignee_is_allowed() {
+    local candidate="$1"
+    local assignee
+
+    for assignee in "${ASSIGNEES_TO_PULL[@]}"; do
+        if [ "$candidate" == "$assignee" ]; then
+            return 0
+        fi
+    done
+
+    return 1
+}
+
+append_matching_assignee() {
+    local assignee="$1"
+
+    case ",$BRANCH_PULL_ASSIGNEES," in
+        *",$assignee,"*)
+            return
+            ;;
+    esac
+
+    if [ -z "$BRANCH_PULL_ASSIGNEES" ]; then
+        BRANCH_PULL_ASSIGNEES="$assignee"
+    else
+        BRANCH_PULL_ASSIGNEES="$BRANCH_PULL_ASSIGNEES, $assignee"
+    fi
+}
+
 branch_assigned_to_user() {
     local branch="$1"
     local assignee
-    local jq_filter
 
     if [ "$ASSIGNEE_CHECK_AVAILABLE" -ne 1 ]; then
         return 1
     fi
 
-    jq_filter='any(.[].assignees[].login; '
-    for assignee in "${ASSIGNEES_TO_PULL[@]}"; do
-        jq_filter+=". == \"$assignee\" or "
-    done
-    jq_filter="${jq_filter% or })"
-
-    gh pr list \
+    BRANCH_PULL_ASSIGNEES=""
+    while IFS= read -r assignee; do
+        if assignee_is_allowed "$assignee"; then
+            append_matching_assignee "$assignee"
+        fi
+    done < <(gh pr list \
         --head "$branch" \
         --state open \
         --json assignees \
-        --jq "$jq_filter" 2> /dev/null | grep -q "true"
+        --jq '.[].assignees[].login' 2> /dev/null)
+
+    if [ -n "$BRANCH_PULL_ASSIGNEES" ]; then
+        return 0
+    else
+        return 1
+    fi
 }
 
 # Save current directory (the one the script was *called* from)
@@ -184,7 +218,7 @@ while IFS= read -r -d '' git_dir; do
             # assigned to one of the configured GitHub users.
             if ! should_pull_branch "$branch"; then
                 if branch_assigned_to_user "$branch"; then
-                    echo -e "${BLUE}Pulling assigned branch: $branch${NC}"
+                    echo -e "${BLUE}Pulling assigned branch: $branch (assignee: $BRANCH_PULL_ASSIGNEES)${NC}"
                 else
                     continue
                 fi
