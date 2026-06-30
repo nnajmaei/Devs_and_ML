@@ -56,42 +56,4 @@
 2026-05-05 14:09:10 -0400 - origin/dev/feat/vision-cnn-integration - none
 2026-05-04 10:35:43 -0400 - origin/dev/feat/vision-ball-detection-cnn - none
 2026-05-01 17:59:24 -0300 - origin/dev/investigation/bi-profiling-analysis - none
-2026-04-30 01:40:42 +0000 - origin/dev/fix-empty-carousel-staging-3c06 * - none
-2026-04-30 01:40:42 +0000 - origin/stagin/fix-empty-carousel-uploads-3c06 * - none
-2026-04-30 01:39:18 +0000 - origin/dev/fix-empty-carousel-uploads-3c06 * - none
-2026-04-28 15:36:35 -0400 - origin/main/feat/socketio-poc * - none
-2026-04-28 12:49:40 -0400 - origin/dev/feat/pitch_tracking_analysis * - none
-2026-04-24 17:23:21 -0400 - origin/dev/investigation/cal-robustness * - none
-2026-04-24 16:02:46 -0400 - origin/dev/imp/parallel_unit_tests * - none
-2026-04-24 12:58:35 -0400 - origin/dev/imp/projector_realtime * - none
-2026-04-22 16:58:03 -0400 - origin/dev/imp/optomize_unit_tests * - none
-2026-04-21 10:49:30 -0400 - origin/dev/temp/enable-raised-calibration * - none
-2026-04-17 16:41:46 -0400 - origin/dev/feat/Python314 * - none
-2026-04-16 22:16:33 -0400 - origin/dev/feat/open_telemetry * - none
-2026-04-14 12:05:52 -0400 - origin/dev/feat/swing-evaluation * - none
-2026-04-08 16:58:44 -0400 - origin/main/patch/fix-camera-fat-cells * - none
-2026-04-02 01:47:21 -0400 - origin/dev/feat/streaming_cameras * - none
-2026-03-19 15:12:27 -0400 - origin/dev/feat/get-chessboard-rotation * - none
-2026-03-17 19:22:15 -0400 - origin/dev/feat/get-chessboard-rotation-alternative * - none
-2026-03-12 15:27:39 -0300 - origin/dev/feat/try_tach * - none
-2026-03-11 16:11:28 -0700 - origin/dev/feat/merge-amp-mock * - none
-2026-03-04 11:48:00 -0500 - origin/dev/feat/solve-rotation-from-plate-distance * - none
-2026-02-11 14:12:16 -0500 - origin/dev/feat/upload-traj-video-on-failed-detection * - none
-2026-02-09 13:15:34 -0500 - origin/dev/feat/compare-same-shots-over-time * - none
-2026-01-29 23:34:56 -0500 - origin/dev/feat/process_frames_earlier * - none
-2026-01-28 10:46:21 -0500 - origin/dev/feat/hit-annotation-parsing * - none
-2026-01-26 17:28:44 -0500 - origin/dev/fix/dynamic_cropping * - none
-2026-01-21 15:07:33 -0500 - origin/dev/feat/pitch-mog-optimization * - none
-2026-01-21 14:04:27 -0500 - origin/dev/improv/reduce_ball_presence_polling * - none
-2026-01-21 11:51:03 -0500 - origin/dev/feat/ffc-120-fps * - none
-2026-01-20 17:56:34 -0500 - origin/dev/feat/vision-confidence-checks * - none
-2026-01-14 10:40:48 -0500 - origin/dev/feat/hit-detection-mog-improvments * - none
-2026-01-09 08:33:44 -0500 - origin/dev/patch/use_coreutils_mongo_s3_utils * - none
-2026-01-09 08:07:52 -0500 - origin/dev/use_new_vision_collections * - none
-2026-01-05 10:36:50 -0500 - origin/dev/SwingLSTM * - none
-2025-12-15 19:05:01 -0500 - origin/dev/feat/parse_annotation_xml * - none
-2025-12-11 14:50:18 -0500 - origin/dev/feat/confidence_metric_analysis * - none
-2025-12-08 11:24:03 -0500 - origin/dev/swing_detection * - none
-2025-11-24 16:32:15 -0500 - origin/dev/feat/hit-detection-runtime-improvement * - none
-2025-11-24 09:59:27 -0500 - origin/dev/feat/hit-summary-in-video-playback * - none
 2025-10-10 10:33:39 -0400 - origin/dev/feat/fly_aug7_updates * - none
