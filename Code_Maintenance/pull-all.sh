@@ -8,6 +8,30 @@ BLUE='\033[0;34m'
 PURPLE='\033[0;35m'
 NC='\033[0m' # No Color
 
+if [ -z "$BASH_VERSION" ]; then
+    exec /bin/bash "$0" "$@"
+fi
+
+cleanup_temp_copy() {
+    if [ -n "$PULL_ALL_TEMP_COPY" ] && [ -f "$PULL_ALL_TEMP_COPY" ]; then
+        rm -f "$PULL_ALL_TEMP_COPY"
+    fi
+}
+
+# This script checks out multiple branches. Run from a temp copy so changing
+# branches cannot swap out the script file while Bash is still reading it.
+if [ -z "$PULL_ALL_RUNNING_FROM_COPY" ]; then
+    SCRIPT_SOURCE="${BASH_SOURCE[0]}"
+    if [[ "$SCRIPT_SOURCE" != /* ]]; then
+        SCRIPT_SOURCE="$(pwd -P)/$SCRIPT_SOURCE"
+    fi
+
+    SCRIPT_COPY="$(mktemp /tmp/pull-all.XXXXXX.sh)"
+    cp "$SCRIPT_SOURCE" "$SCRIPT_COPY"
+    chmod +x "$SCRIPT_COPY"
+    PULL_ALL_RUNNING_FROM_COPY=1 PULL_ALL_TEMP_COPY="$SCRIPT_COPY" exec /bin/bash "$SCRIPT_COPY" "$@"
+fi
+
 # Variables to track successful and failed pulls
 SUCCESSFUL_PULLS=0
 FAILED_PULLS=0
@@ -32,6 +56,46 @@ should_pull_branch() {
     esac
 }
 
+# Non-deploy branches are pulled only when their open GitHub PR is assigned to
+# one of these users. Requires the GitHub CLI to be installed and authenticated.
+ASSIGNEES_TO_PULL=(
+    "nnajmaei"
+    "mat-trajekt"
+    "sheikh-nooruddin"
+    "ryanallen-traj"
+    "justinmende"
+)
+ASSIGNEE_CHECK_AVAILABLE=1
+if ! command -v gh > /dev/null 2>&1; then
+    ASSIGNEE_CHECK_AVAILABLE=0
+    echo -e "${YELLOW}Warning: gh CLI not found. Only deploy branches will be pulled.${NC}"
+elif ! gh auth status > /dev/null 2>&1; then
+    ASSIGNEE_CHECK_AVAILABLE=0
+    echo -e "${YELLOW}Warning: gh CLI is not authenticated. Only deploy branches will be pulled.${NC}"
+fi
+
+branch_assigned_to_user() {
+    local branch="$1"
+    local assignee
+    local jq_filter
+
+    if [ "$ASSIGNEE_CHECK_AVAILABLE" -ne 1 ]; then
+        return 1
+    fi
+
+    jq_filter='any(.[].assignees[].login; '
+    for assignee in "${ASSIGNEES_TO_PULL[@]}"; do
+        jq_filter+=". == \"$assignee\" or "
+    done
+    jq_filter="${jq_filter% or })"
+
+    gh pr list \
+        --head "$branch" \
+        --state open \
+        --json assignees \
+        --jq "$jq_filter" 2> /dev/null | grep -q "true"
+}
+
 # Save current directory (the one the script was *called* from)
 REPO_ROOT="$(pwd -P)"
 
@@ -49,7 +113,7 @@ git fetch --all --prune
 git remote prune origin
 
 # Trap to ensure we return to the original branch before exit
-trap 'cd "$REPO_ROOT" && git checkout "$ORIGINAL_BRANCH"' EXIT
+trap 'cd "$REPO_ROOT" && git checkout "$ORIGINAL_BRANCH"; cleanup_temp_copy' EXIT
 
 # Find all git repositories recursively
 while IFS= read -r -d '' git_dir; do
@@ -116,9 +180,14 @@ while IFS= read -r -d '' git_dir; do
                 continue
             fi
 
-            # Only pull the target deploy branches; skip pull for all others.
+            # Pull target deploy branches, plus other branches whose open PR is
+            # assigned to one of the configured GitHub users.
             if ! should_pull_branch "$branch"; then
-                continue
+                if branch_assigned_to_user "$branch"; then
+                    echo -e "${BLUE}Pulling assigned branch: $branch${NC}"
+                else
+                    continue
+                fi
             fi
 
             echo "-----------------"
